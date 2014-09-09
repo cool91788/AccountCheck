@@ -20,7 +20,7 @@ public class AC_main extends Plugin {
 		配置預設設定檔();
 		讀取設定檔();
 		getProxy().getPluginManager().registerListener(this, new AC_check());
-		getLogger().info("感謝使用半正版驗證插件！版本：1.2.6");
+		getLogger().info("感謝使用半正版驗證插件！");
 	}
 	
 	public void 配置預設設定檔() {
