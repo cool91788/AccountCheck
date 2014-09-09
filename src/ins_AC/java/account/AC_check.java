@@ -67,19 +67,13 @@ public class AC_check extends Plugin implements Listener {
 	public void 正盜版分流(PostLoginEvent loginevent) {
 
 		if (checknumber == 1) {
-			loginevent.getPlayer().setReconnectServer(
-					(ServerInfo) ProxyServer.getInstance().getServers()
-							.get(AC_main.正版登入));
-			ProxyServer.getInstance().getReconnectHandler()
-					.setServer(loginevent.getPlayer());
+			loginevent.getPlayer().setReconnectServer((ServerInfo) ProxyServer.getInstance().getServers().get(AC_main.正版登入));
+			ProxyServer.getInstance().getReconnectHandler().setServer(loginevent.getPlayer());
 			loginevent.getPlayer().sendMessage(ChatColor.GREEN + "歡迎正版玩家登入！");
 			checknumber = 2;
 		} else if (checknumber == 0) {
-			loginevent.getPlayer().setReconnectServer(
-					(ServerInfo) ProxyServer.getInstance().getServers()
-							.get(AC_main.盜版登入));
-			ProxyServer.getInstance().getReconnectHandler()
-					.setServer(loginevent.getPlayer());
+			loginevent.getPlayer().setReconnectServer((ServerInfo) ProxyServer.getInstance().getServers().get(AC_main.盜版登入));
+			ProxyServer.getInstance().getReconnectHandler().setServer(loginevent.getPlayer());
 			checknumber = 2;
 		} else {
 			checknumber = 2;
