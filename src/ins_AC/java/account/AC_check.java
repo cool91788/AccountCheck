@@ -22,27 +22,33 @@ public class AC_check extends Plugin implements Listener {
 
 		int httpchecknumber = 0 , errornumber = 0;
 		String httpcheck = new String(AC_getperinfo.getIdData("https://minecraft.net/haspaid.jsp?user=" + loginevent.getConnection().getName()));
-		while (httpcheck == null || httpchecknumber < 7) {
+		while (httpcheck == null) {
+			if (httpchecknumber > 7) {
+				break;
+			}
 			httpcheck = new String(AC_getperinfo.getIdData("https://minecraft.net/haspaid.jsp?user=" + loginevent.getConnection().getName()));
 			httpchecknumber++;
 		}
-		while (httpcheck.equals("") || httpcheck.contains("Σ(ﾟДﾟ；≡；ﾟдﾟ)") || httpchecknumber < 7) {
+		while ((httpcheck.equals("") || httpcheck.contains("Σ(ﾟДﾟ；≡；ﾟдﾟ)")) && httpchecknumber < 7) {
 			if (httpcheck.equals("Σ(ﾟДﾟ；≡；ﾟдﾟ)HTTP ERROR")) {
 				errornumber = 1;
 				logger.warning("[半正版驗證] 網頁開啟錯誤！");
+				httpchecknumber++;
 				httpcheck = new String(AC_getperinfo.getIdData("https://minecraft.net/haspaid.jsp?user=" + loginevent.getConnection().getName()));
 			} else if (httpcheck.equals("Σ(ﾟДﾟ；≡；ﾟдﾟ)HTTP ERROR AT CLOSE")) {
 				errornumber = 2;
 				logger.warning("[半正版驗證] 網頁關閉錯誤！");
+				httpchecknumber++;
 				httpcheck = new String(AC_getperinfo.getIdData("https://minecraft.net/haspaid.jsp?user=" + loginevent.getConnection().getName()));
 			} else {
+				httpchecknumber++;
 				httpcheck = new String(AC_getperinfo.getIdData("https://minecraft.net/haspaid.jsp?user=" + loginevent.getConnection().getName()));
 			}
 		}
-		if (httpcheck.equals("true") || httpchecknumber < 7) {
+		if (httpcheck.equals("true") && httpchecknumber < 7) {
 			loginevent.getConnection().setOnlineMode(true);
 			checknumber = 1;
-		} else if (httpcheck.equals("false") || httpchecknumber < 7) {
+		} else if (httpcheck.equals("false") && httpchecknumber < 7) {
 			loginevent.getConnection().setOnlineMode(false);
 			checknumber = 0;
 		} else {
@@ -56,6 +62,7 @@ public class AC_check extends Plugin implements Listener {
 				loginevent.getConnection().disconnect("登入失敗！請稍後再嘗試。 錯誤代碼：102");
 			} else {
 				errornumber = 0;
+				loginevent.getConnection().disconnect("登入失敗！請稍後再嘗試。 錯誤代碼：103");
 			}
 		}
 		httpcheck = null;
