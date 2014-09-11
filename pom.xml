@@ -6,7 +6,6 @@
 
     <groupId>account</groupId>
     <artifactId>AccountCheck</artifactId>
-    <version>1.2.6</version>
 
     <repositories>
         <repository>
@@ -38,4 +37,5 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+    <version>1.7.2_U</version>
 </project>
