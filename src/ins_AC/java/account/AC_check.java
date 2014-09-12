@@ -24,38 +24,27 @@ public class AC_check extends Plugin implements Listener {
 		String httpcheck = new String(AC_getperinfo.getIdData("https://minecraft.net/haspaid.jsp?user=" + loginevent.getConnection().getName()));
 		while (httpcheck == null) {
 			httpchecknumber = 1;
+			loginevent.getConnection().disconnect("登入失敗！請稍後再嘗試。 錯誤代碼：100");
 			break;
 		}
-		if (httpchecknumber != 0) {
-			if (httpcheck.equals("Σ(ﾟДﾟ；≡；ﾟдﾟ)HTTP ERROR")) {
+		if (httpchecknumber == 0) {
+			if (httpcheck.equals("true")) {
+				loginevent.getConnection().setOnlineMode(true);
+				checknumber = 1;
+			} else if (httpcheck.equals("false")) {
+				loginevent.getConnection().setOnlineMode(false);
+				checknumber = 0;
+			} else if (httpcheck.equals("Σ(ﾟДﾟ；≡；ﾟдﾟ)HTTP ERROR")) {
 				logger.warning("[半正版驗證] 網頁開啟錯誤！");
-				httpchecknumber = 2;
+				loginevent.getConnection().disconnect("登入失敗！請稍後再嘗試。 錯誤代碼：101");
 			} else if (httpcheck.equals("Σ(ﾟДﾟ；≡；ﾟдﾟ)HTTP ERROR AT CLOSE")) {
 				logger.warning("[半正版驗證] 網頁關閉錯誤！");
-				httpchecknumber = 3;
-			} else {
-				httpchecknumber = 4;
-			}
-		}
-		if (httpcheck.equals("true") && httpchecknumber == 0) {
-			loginevent.getConnection().setOnlineMode(true);
-			checknumber = 1;
-		} else if (httpcheck.equals("false") && httpchecknumber == 0) {
-			loginevent.getConnection().setOnlineMode(false);
-			checknumber = 0;
-		} else {
-			if (httpchecknumber == 1) {
-				loginevent.getConnection().disconnect("登入失敗！請稍後再嘗試。 錯誤代碼：100");
-			} else if (httpchecknumber == 2) {
-				loginevent.getConnection().disconnect("登入失敗！請稍後再嘗試。 錯誤代碼：101");
-			} else if(httpchecknumber == 3) {
 				loginevent.getConnection().disconnect("登入失敗！請稍後再嘗試。 錯誤代碼：102");
 			} else {
 				loginevent.getConnection().disconnect("登入失敗！請稍後再嘗試。 錯誤代碼：103");
 			}
 		}
 		httpcheck = null;
-		httpchecknumber = 0;
 	}
 
 	@EventHandler
