@@ -23,8 +23,8 @@ public class AC_getperinfo extends Plugin {
 
 			url = new URL(http);
 			conn = url.openConnection();
-			conn.setConnectTimeout(5000);
-			conn.setReadTimeout(5000);
+			conn.setConnectTimeout(2000);
+			conn.setReadTimeout(2000);
 			input = conn.getInputStream();
 			inputread = new InputStreamReader(input, "UTF-8");
 			buffer = new BufferedReader(inputread);
