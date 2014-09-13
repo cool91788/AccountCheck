@@ -21,6 +21,10 @@ public class AC_check extends Plugin implements Listener {
 	public void 選擇onlinemode(PreLoginEvent loginevent) {
 
 		String httpcheck = new String(AC_getperinfo.getIdData("https://minecraft.net/haspaid.jsp?user=" + loginevent.getConnection().getName()));
+		while (httpcheck == null) {
+			loginevent.getConnection().disconnect("登入失敗！請稍後再嘗試。 錯誤代碼：100");
+			break;
+		}
 		if (httpcheck != null) {
 			if (httpcheck.equals("true")) {
 				loginevent.getConnection().setOnlineMode(true);
@@ -37,8 +41,6 @@ public class AC_check extends Plugin implements Listener {
 			} else {
 				loginevent.getConnection().disconnect("登入失敗！請稍後再嘗試。 錯誤代碼：103");
 			}
-		} else {
-			loginevent.getConnection().disconnect("登入失敗！請稍後再嘗試。 錯誤代碼：100");
 		}
 		httpcheck = null;
 	}
