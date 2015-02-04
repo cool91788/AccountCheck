@@ -52,14 +52,12 @@ public class AC_check_Thread implements Runnable{
 			Process process = Runtime.getRuntime().exec(AC_main.executefolder + url);
 			BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
 			String getoutput = br.readLine();
-			
-			try {process.waitFor();}
-			catch (InterruptedException e) {e.printStackTrace();}
-			 
+			br.close();
+			process.waitFor(); 
 			return Integer.parseInt(getoutput);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
+			
+		} catch (IOException e1) {e1.printStackTrace();
+		} catch (InterruptedException e) {e.printStackTrace();}
 			return 1289616;
 	}
 
@@ -77,11 +75,9 @@ public class AC_check_Thread implements Runnable{
 	}
 
 	public void postLoginCheck() {
-		//AC_getperinfo postgethttp = new AC_getperinfo();
 		String postname = postloginevent.getPlayer().getName();
 		String ip = postloginevent.getPlayer().getAddress().toString();
 		int postchecknumber = getinfo("https://minecraft.net/haspaid.jsp?user=" + postname);
-		//postgethttp.gethttp("https://minecraft.net/haspaid.jsp?user=" + postname);
 		switch(postchecknumber) {
 		case 0:
 			postloginevent.getPlayer().setReconnectServer((ServerInfo) ProxyServer.getInstance().getServers().get(AC_main.盜版登入));
@@ -111,9 +107,7 @@ public class AC_check_Thread implements Runnable{
 	public void preLoginCheck() {
 		String prename = preloginevent.getConnection().getName();
 		String ip = preloginevent.getConnection().getAddress().toString();
-		//AC_getperinfo pregethttp = new AC_getperinfo();
 		int prechecknumber = getinfo("https://minecraft.net/haspaid.jsp?user=" + prename);
-		//pregethttp.gethttp("https://minecraft.net/haspaid.jsp?user=" + prename);
 		switch(prechecknumber) {
 		case 0:
 			log(2, prename, ip);
