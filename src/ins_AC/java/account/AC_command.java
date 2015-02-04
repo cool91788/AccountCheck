@@ -1,3 +1,21 @@
+/*
+ * 	AccountCheck (åŠæ­£ç‰ˆé©—è­‰) - A BungeeCord plugin
+ *	Copyright (C) 2014  Install
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 package ins_AC.java.account;
 
 import java.io.File;
@@ -23,8 +41,8 @@ public class AC_command extends Command{
 	public boolean reloadconfig() {
 		try {
 			Configuration configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(folder, "config.yml"));
-			AC_main.¥¿ª©µn¤J = new String(configuration.getString("¥¿ª©µn¤J³B"));
-			AC_main.µsª©µn¤J = new String(configuration.getString("µsª©µn¤J³B"));
+			AC_main.æ­£ç‰ˆç™»å…¥ = new String(configuration.getString("æ­£ç‰ˆç™»å…¥è™•"));
+			AC_main.ç›œç‰ˆç™»å…¥ = new String(configuration.getString("ç›œç‰ˆç™»å…¥è™•"));
 			configuration = null;
 		} catch (IOException e) {
 			return false;
@@ -37,42 +55,42 @@ public class AC_command extends Command{
 		if(cmdargs.length!=0) {
 			switch(cmdargs[0]) {
 			case "reload":
-			case "­«·sÅª¨ú":
+			case "é‡æ–°è®€å–":
 				if(reloadconfig())
-					commandSender.sendMessage(new ComponentBuilder(ChatColor.YELLOW + "­«·sÅª¨ú³]©wÀÉ§¹¦¨¡I").create());
+					commandSender.sendMessage(new ComponentBuilder(ChatColor.YELLOW + "é‡æ–°è®€å–è¨­å®šæª”å®Œæˆï¼").create());
 				else
-					commandSender.sendMessage(new ComponentBuilder(ChatColor.RED + "­«·sÅª¨ú³]©wÀÉ¥¢±Ñ¡I½ĞÀË¬d¬O§_¦³µL¨ä¥L¿ù»~¡I").create());
+					commandSender.sendMessage(new ComponentBuilder(ChatColor.RED + "é‡æ–°è®€å–è¨­å®šæª”å¤±æ•—ï¼è«‹æª¢æŸ¥æ˜¯å¦æœ‰ç„¡å…¶ä»–éŒ¯èª¤ï¼").create());
 				break;
 			case "help":
 			case "?":
-			case "»¡©ú":
-				commandSender.sendMessage(new ComponentBuilder("-->¥b¥¿ª©ÅçÃÒ´¡¥óv1.4_BETA»¡©úÀÉ<--").color(ChatColor.RED).bold(true).create());
+			case "èªªæ˜":
+				commandSender.sendMessage(new ComponentBuilder("-->åŠæ­£ç‰ˆé©—è­‰æ’ä»¶v1.4èªªæ˜æª”<--").color(ChatColor.RED).bold(true).create());
 				commandSender.sendMessage(new ComponentBuilder(ChatColor.BLUE + "<===================================>").create());
-				commandSender.sendMessage(new ComponentBuilder(ChatColor.YELLOW + "«eºó«ü¥O¥i¥H¥´¡G"
+				commandSender.sendMessage(new ComponentBuilder(ChatColor.YELLOW + "å‰ç¶´æŒ‡ä»¤å¯ä»¥æ‰“ï¼š"
 						+ ChatColor.GREEN + "\"accountcheck\"" + ChatColor.YELLOW+ " or "
-						+ ChatColor.GREEN + "\"ac\"" + ChatColor.YELLOW + "¡A¥Ü½d¥H\"ac\"Â²¼g¡C").create());
+						+ ChatColor.GREEN + "\"ac\"" + ChatColor.YELLOW + "ï¼Œç¤ºç¯„ä»¥\"ac\"ç°¡å¯«ã€‚").create());
 				commandSender.sendMessage(new ComponentBuilder(ChatColor.GREEN + "/ac reload" + ChatColor.YELLOW + " or "
-						+ ChatColor.GREEN + "/ac ­«·sÅª¨ú").create());
-				commandSender.sendMessage(new ComponentBuilder(ChatColor.YELLOW + "--->­«·sÅª¨ú³]©wÀÉ¡C").create());
+						+ ChatColor.GREEN + "/ac é‡æ–°è®€å–").create());
+				commandSender.sendMessage(new ComponentBuilder(ChatColor.YELLOW + "--->é‡æ–°è®€å–è¨­å®šæª”ã€‚").create());
 				commandSender.sendMessage(new ComponentBuilder(ChatColor.GREEN + "/ac help" + ChatColor.YELLOW + " or "
 						+ ChatColor.GREEN + "/ac ?" + ChatColor.YELLOW + " or "
-						+ ChatColor.GREEN + "/ac »¡©ú").create());
-				commandSender.sendMessage(new ComponentBuilder(ChatColor.YELLOW + "--->À°§U»¡©ú¡C").create());
+						+ ChatColor.GREEN + "/ac èªªæ˜").create());
+				commandSender.sendMessage(new ComponentBuilder(ChatColor.YELLOW + "--->å¹«åŠ©èªªæ˜ã€‚").create());
 				commandSender.sendMessage(new ComponentBuilder(ChatColor.GREEN + "/ac version" + ChatColor.YELLOW + " or "
 						+ ChatColor.GREEN + "/ac v").create());
-				commandSender.sendMessage(new ComponentBuilder(ChatColor.YELLOW + "--->¬d¬İ¥Ø«e¹B¦æª©¥»¡C").create());
+				commandSender.sendMessage(new ComponentBuilder(ChatColor.YELLOW + "--->æŸ¥çœ‹ç›®å‰é‹è¡Œç‰ˆæœ¬ã€‚").create());
 				commandSender.sendMessage(new ComponentBuilder(ChatColor.BLUE + "<===================================>").create());
 				break;
 			case "version":
 			case "v":
-				commandSender.sendMessage(new ComponentBuilder(ChatColor.RED + "v1.4_BETA").create());
+				commandSender.sendMessage(new ComponentBuilder(ChatColor.RED + "v1.4").create());
 				break;
 			default:
-				commandSender.sendMessage(new ComponentBuilder(ChatColor.RED + "µL¦¹«ü¥O¡I½Ğ¿é¤J/ac help¬d¾\¡I").create());
+				commandSender.sendMessage(new ComponentBuilder(ChatColor.RED + "ç„¡æ­¤æŒ‡ä»¤ï¼è«‹è¼¸å…¥/ac helpæŸ¥é–±ï¼").create());
 			}
 		}
 		else
-			commandSender.sendMessage(new ComponentBuilder(ChatColor.YELLOW + "¥b¥¿ª©ÅçÃÒ´¡¥ó¡C±ıª¾¸Ô²Ó½Ğ¿é¤J/ac help.").create());
+			commandSender.sendMessage(new ComponentBuilder(ChatColor.YELLOW + "åŠæ­£ç‰ˆé©—è­‰æ’ä»¶ã€‚æ¬²çŸ¥è©³ç´°è«‹è¼¸å…¥/ac help.").create());
 		
 	}
 }

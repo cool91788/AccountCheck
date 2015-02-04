@@ -1,14 +1,35 @@
+/*
+ * 	AccountCheck (åŠæ­£ç‰ˆé©—è­‰) - A BungeeCord plugin
+ *	Copyright (C) 2014  Install
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 package ins_AC.java.account;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.event.PreLoginEvent;
+import net.md_5.bungee.api.plugin.Plugin;
 
 public class AC_check_Thread implements Runnable{
 	
@@ -63,27 +84,27 @@ public class AC_check_Thread implements Runnable{
 		//postgethttp.gethttp("https://minecraft.net/haspaid.jsp?user=" + postname);
 		switch(postchecknumber) {
 		case 0:
-			postloginevent.getPlayer().setReconnectServer((ServerInfo) ProxyServer.getInstance().getServers().get(AC_main.µsª©µn¤J));
+			postloginevent.getPlayer().setReconnectServer((ServerInfo) ProxyServer.getInstance().getServers().get(AC_main.ç›œç‰ˆç™»å…¥));
 			ProxyServer.getInstance().getReconnectHandler().setServer(postloginevent.getPlayer());
 			log(0, postname, ip);
 			break;
 		case 1:
-			postloginevent.getPlayer().setReconnectServer((ServerInfo) ProxyServer.getInstance().getServers().get(AC_main.¥¿ª©µn¤J));
+			postloginevent.getPlayer().setReconnectServer((ServerInfo) ProxyServer.getInstance().getServers().get(AC_main.æ­£ç‰ˆç™»å…¥));
 			ProxyServer.getInstance().getReconnectHandler().setServer(postloginevent.getPlayer());
 			log(1, postname, ip);
-			postloginevent.getPlayer().sendMessage(ChatColor.GREEN + "Åwªï¥¿ª©ª±®aµn¤J¡I");
+			postloginevent.getPlayer().sendMessage(ChatColor.GREEN + "æ­¡è¿æ­£ç‰ˆç©å®¶ç™»å…¥ï¼");
 			break;
 		case 100:
 			log(100, postname, ip);
-			postloginevent.getPlayer().disconnect(ChatColor.RED + "µn¤J¥¢±Ñ¡I½Ğµy«á¦A¹Á¸Õ¡C ¿ù»~¥N½X¡G100");
+			postloginevent.getPlayer().disconnect(ChatColor.RED + "ç™»å…¥å¤±æ•—ï¼è«‹ç¨å¾Œå†å˜—è©¦ã€‚ éŒ¯èª¤ä»£ç¢¼ï¼š100");
 			break;
 		case 101:
 			log(101, postname, ip);
-			postloginevent.getPlayer().disconnect(ChatColor.RED + "µn¤J¥¢±Ñ¡I½Ğµy«á¦A¹Á¸Õ¡C ¿ù»~¥N½X¡G101");
+			postloginevent.getPlayer().disconnect(ChatColor.RED + "ç™»å…¥å¤±æ•—ï¼è«‹ç¨å¾Œå†å˜—è©¦ã€‚ éŒ¯èª¤ä»£ç¢¼ï¼š101");
 			break;
 		default:
 			log(1000, postname, ip);
-			postloginevent.getPlayer().disconnect(ChatColor.RED + "µo¥Í¤£©ú¿ù»~¡I");
+			postloginevent.getPlayer().disconnect(ChatColor.RED + "ç™¼ç”Ÿä¸æ˜éŒ¯èª¤ï¼");
 		}
 	}
 
@@ -104,65 +125,52 @@ public class AC_check_Thread implements Runnable{
 			break;
 		case 100:
 			log(100, prename, ip);
-			preloginevent.getConnection().disconnect(ChatColor.RED + "µn¤J¥¢±Ñ¡I½Ğµy«á¦A¹Á¸Õ¡C ¿ù»~¥N½X¡G100");
+			preloginevent.getConnection().disconnect(ChatColor.RED + "ç™»å…¥å¤±æ•—ï¼è«‹ç¨å¾Œå†å˜—è©¦ã€‚ éŒ¯èª¤ä»£ç¢¼ï¼š100");
 			break;
 		case 101:
 			log(101, prename, ip);
-			preloginevent.getConnection().disconnect(ChatColor.RED + "µn¤J¥¢±Ñ¡I½Ğµy«á¦A¹Á¸Õ¡C ¿ù»~¥N½X¡G101");
+			preloginevent.getConnection().disconnect(ChatColor.RED + "ç™»å…¥å¤±æ•—ï¼è«‹ç¨å¾Œå†å˜—è©¦ã€‚ éŒ¯èª¤ä»£ç¢¼ï¼š101");
 			break;
 		default:
 			log(1000, prename, ip);
-			preloginevent.getConnection().disconnect(ChatColor.RED + "µo¥Í¤£©ú¿ù»~¡I");
+			preloginevent.getConnection().disconnect(ChatColor.RED + "ç™¼ç”Ÿä¸æ˜éŒ¯èª¤ï¼");
 		}
 	}
 
 	public void log(int msgnum, String name, String ip) {
+		ip = ip.substring(1, ip.indexOf(':'));
 		switch(msgnum) {
 		case 0:
-			System.out.print(ChatColor.GREEN + "[" + ChatColor.YELLOW  +"°T®§" 
-					+ ChatColor.GREEN + "]" + ChatColor.RESET + " [" 
-					+ ChatColor.GREEN + "¥b¥¿ª©ÅçÃÒ" + ChatColor.RESET + "] " 
-					+ ChatColor.YELLOW + "µsª©ª±®a¡G" + name + ChatColor.GREEN + "¡A¨Ó¦Û¡G" 
-					+ ChatColor.RED + ip + ChatColor.YELLOW + "¡Cµn¤J¡I");
+			AC_main.mainPluginObj.getLogger().info(ChatColor.GREEN + "[" + ChatColor.YELLOW  +"è¨Šæ¯" 
+					+ ChatColor.GREEN + "] " + ChatColor.YELLOW + "ç›œç‰ˆç©å®¶ï¼š" + name + ChatColor.GREEN + "ï¼Œä¾†è‡ªï¼š" 
+					+ ChatColor.RED + ip + ChatColor.YELLOW + "ã€‚ç™»å…¥ï¼");
 			break;
 		case 1:
-			System.out.print(ChatColor.GREEN + "[" + ChatColor.YELLOW  +"°T®§" 
-					+ ChatColor.GREEN + "]" + ChatColor.RESET + " [" 
-					+ ChatColor.GREEN + "¥b¥¿ª©ÅçÃÒ" + ChatColor.RESET + "] " 
-					+ ChatColor.YELLOW + "¥¿ª©ª±®a¡G" + name + ChatColor.GREEN + "¡A¨Ó¦Û¡G" 
-					+ ChatColor.RED + ip + ChatColor.YELLOW + "¡Cµn¤J¡I");
+			AC_main.mainPluginObj.getLogger().info(ChatColor.GREEN + "[" + ChatColor.YELLOW  +"è¨Šæ¯" 
+					+ ChatColor.GREEN + "] " + ChatColor.YELLOW + "æ­£ç‰ˆç©å®¶ï¼š" + name + ChatColor.GREEN + "ï¼Œä¾†è‡ªï¼š" 
+					+ ChatColor.RED + ip + ChatColor.YELLOW + "ã€‚ç™»å…¥ï¼");
 			break;
 		case 2:
-			System.out.print(ChatColor.GREEN + "[" + ChatColor.YELLOW  +"°T®§" 
-					+ ChatColor.GREEN + "]" + ChatColor.RESET + " [" 
-					+ ChatColor.GREEN + "¥b¥¿ª©ÅçÃÒ" + ChatColor.RESET + "] " 
-					+ ChatColor.GREEN + "µsª©ª±®a¡G" + name + "¡A¨Ó¦Û¡G" 
-					+ ChatColor.RED + ip  + ChatColor.GREEN + "¡C¹Á¸Õ³sµ²¡C");
+			AC_main.mainPluginObj.getLogger().info(ChatColor.GREEN + "[" + ChatColor.YELLOW  +"è¨Šæ¯" 
+					+ ChatColor.GREEN + "] " + "ç›œç‰ˆç©å®¶ï¼š" + name + "ï¼Œä¾†è‡ªï¼š" 
+					+ ChatColor.RED + ip  + ChatColor.GREEN + "ã€‚å˜—è©¦é€£çµã€‚");
 			break;
 		case 3:
-			System.out.print(ChatColor.GREEN + "[" + ChatColor.YELLOW  +"°T®§" 
-					+ ChatColor.GREEN + "]" + ChatColor.RESET + " [" 
-					+ ChatColor.GREEN + "¥b¥¿ª©ÅçÃÒ" + ChatColor.RESET + "] " 
-					+ ChatColor.GREEN + "¥¿ª©ª±®a¡G" + name + "¡A¨Ó¦Û¡G" 
-					+ ChatColor.RED + ip  + ChatColor.GREEN + "¡C¹Á¸Õ³sµ²¡C");
+			AC_main.mainPluginObj.getLogger().info(ChatColor.GREEN + "[" + ChatColor.YELLOW  +"è¨Šæ¯" 
+					+ ChatColor.GREEN + "] " + "æ­£ç‰ˆç©å®¶ï¼š" + name + "ï¼Œä¾†è‡ªï¼š" 
+					+ ChatColor.RED + ip  + ChatColor.GREEN + "ã€‚å˜—è©¦é€£çµã€‚");
 			break;
 		case 100:
-			System.err.print(ChatColor.GREEN + "[" + ChatColor.RED  + "¿ù»~" 
-					+ ChatColor.GREEN + "]" + ChatColor.RESET + " [" 
-					+ ChatColor.RED + "¥b¥¿ª©ÅçÃÒ" + ChatColor.RESET + "]" 
-					+ ChatColor.RED + " µo¥Í¿ù»~¥N½X¬°\"100\"ªº¿ù»~¡I");
+			AC_main.mainPluginObj.getLogger().warning(ChatColor.GREEN + "[" + ChatColor.RED  + "éŒ¯èª¤" 
+					+ ChatColor.GREEN + "] " + ChatColor.RED + " ç™¼ç”ŸéŒ¯èª¤ä»£ç¢¼ç‚º\"100\"çš„éŒ¯èª¤ï¼");
 			break;
 		case 101:
-			System.err.print(ChatColor.GREEN + "[" + ChatColor.RED  + "¿ù»~" 
-					+ ChatColor.GREEN + "]" + ChatColor.RESET + " [" 
-					+ ChatColor.RED + "¥b¥¿ª©ÅçÃÒ" + ChatColor.RESET + "]" 
-					+ ChatColor.RED + " ºô­¶¶}±Ò©ÎÃö³¬¿ù»~¡I");
+			AC_main.mainPluginObj.getLogger().warning(ChatColor.GREEN + "[" + ChatColor.RED  + "éŒ¯èª¤" 
+					+ ChatColor.GREEN + "] " + ChatColor.RED + " ç¶²é é–‹å•Ÿæˆ–é—œé–‰éŒ¯èª¤ï¼");
 			break;
 		default:
-			System.err.print(ChatColor.GREEN + "[" + ChatColor.RED  + "¿ù»~" 
-					+ ChatColor.GREEN + "]" + ChatColor.RESET + " [" 
-					+ ChatColor.RED + "¥b¥¿ª©ÅçÃÒ" + ChatColor.RESET + "]" 
-					+ ChatColor.RED + " µo¥Í¥¼ª¾¿ù»~¡I");
+			AC_main.mainPluginObj.getLogger().warning(ChatColor.GREEN + "[" + ChatColor.RED  + "éŒ¯èª¤" 
+					+ ChatColor.GREEN + "] " + ChatColor.RED + " ç™¼ç”ŸæœªçŸ¥éŒ¯èª¤ï¼");
 		}
 	}
 }

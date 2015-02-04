@@ -1,3 +1,21 @@
+/*
+ * 	AccountCheck (åŠæ­£ç‰ˆé©—è­‰) - A BungeeCord plugin
+ *	Copyright (C) 2014  Install
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 package ins_AC.java.account;
 
 import java.io.File;
@@ -12,41 +30,42 @@ import net.md_5.bungee.config.YamlConfiguration;
 
 public class AC_main extends Plugin {
 	
-	static String ¥¿ª©µn¤J;
-	static String µsª©µn¤J;
+	static String æ­£ç‰ˆç™»å…¥;
+	static String ç›œç‰ˆç™»å…¥;
 	static String executefolder;
+	static Plugin mainPluginObj;
 
 	@Override
 	public void onEnable() {
-		
-		°t¸m¹w³]³]©wÀÉ();
-		Åª¨ú³]©wÀÉ();
-		if(ÀË¬d¤Î³]©w¸ô®|())
-			getLogger().info(ChatColor.RED + "¥Ñ©ó¥¼³q¹LÀô¹ÒÀË¬d¡A¬G¥»´¡¥ó¼È®É°±¤î¹B§@¡C" + ChatColor.YELLOW + "­×¥¿¿ù»~«á­«°_¤è¥i¨Ï¥Î¡C");
+		mainPluginObj = this;
+		é…ç½®é è¨­è¨­å®šæª”();
+		è®€å–è¨­å®šæª”();
+		if(æª¢æŸ¥åŠè¨­å®šè·¯å¾‘())
+			getLogger().info(ChatColor.RED + "ç”±æ–¼æœªé€šéç’°å¢ƒæª¢æŸ¥ï¼Œæ•…æœ¬æ’ä»¶æš«æ™‚åœæ­¢é‹ä½œã€‚" + ChatColor.YELLOW + "ä¿®æ­£éŒ¯èª¤å¾Œé‡èµ·æ–¹å¯ä½¿ç”¨ã€‚");
 		else {
-			getProxy().getPluginManager().registerListener(this, new AC_checkListener(this));
+			getProxy().getPluginManager().registerListener(this, new AC_checkListener());
 			getProxy().getPluginManager().registerCommand(this, new AC_command(getDataFolder()));
 		}
-		getLogger().info(ChatColor.RED + "ª©¥»¡G1.4_BETA");
+		getLogger().info(ChatColor.RED + "ç‰ˆæœ¬ï¼šv1.4");
 	}
 	
-	public boolean ÀË¬d¤Î³]©w¸ô®|() {
-		getLogger().info("ÀË¬dÀô¹Ò¤¤¡C¡C¡C");
+	public boolean æª¢æŸ¥åŠè¨­å®šè·¯å¾‘() {
+		getLogger().info("æª¢æŸ¥ç’°å¢ƒä¸­ã€‚ã€‚ã€‚");
 		
 		File executefile = new File(System.getProperty("user.dir") + System.getProperty("file.separator") 
 				+ "plugins", "AccountCheck.jar");
 		executefolder = "java -jar " + System.getProperty("user.dir") + System.getProperty("file.separator")
 				+ getDataFolder() + ".jar ";
 		if(!executefile.exists()) {
-			getLogger().warning(ChatColor.RED + "½Ğ±N¥»´¡¥ójarÀÉ©R¦W¦¨" + ChatColor.YELLOW + "AccountCheck.jar"+ ChatColor.RED + "¡I§_«h±NµLªk¥¿±`¹B¦æ¡I");
+			getLogger().warning(ChatColor.RED + "è«‹å°‡æœ¬æ’ä»¶jaræª”å‘½åæˆ" + ChatColor.YELLOW + "AccountCheck.jar"+ ChatColor.RED + "ï¼å¦å‰‡å°‡ç„¡æ³•æ­£å¸¸é‹è¡Œï¼");
 			return true;
 		}
-		getLogger().info("§¹¦¨¡I");
+		getLogger().info("å®Œæˆï¼");
 		executefile = null;
 		return false;
 	}
 	
-	public void °t¸m¹w³]³]©wÀÉ() {
+	public void é…ç½®é è¨­è¨­å®šæª”() {
 		if (!getDataFolder().exists()) {
 			getDataFolder().mkdir();
 		}
@@ -54,9 +73,9 @@ public class AC_main extends Plugin {
 		File file = new File(getDataFolder(), "config.yml");
 		if (!file.exists()) {
 			try {
-				getLogger().info("§ä¤£¨ì³]©wÀÉ¡A¹w³]³]©wÀÉ°t¸m¤¤¡C¡C");
+				getLogger().info("æ‰¾ä¸åˆ°è¨­å®šæª”ï¼Œé è¨­è¨­å®šæª”é…ç½®ä¸­ã€‚ã€‚");
 				Files.copy(getResourceAsStream("config.yml"), file.toPath());
-				getLogger().info("¹w³]³]©wÀÉ°t¸m§¹¦¨¡I");
+				getLogger().info("é è¨­è¨­å®šæª”é…ç½®å®Œæˆï¼");
 			} catch (IOException e) {
 				throw new RuntimeException("Can't create the config file! ", e);
 			}
@@ -64,11 +83,11 @@ public class AC_main extends Plugin {
 		file = null;
 	}
 	
-	public void Åª¨ú³]©wÀÉ() {
+	public void è®€å–è¨­å®šæª”() {
 		try {
 			Configuration configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(getDataFolder(), "config.yml"));
-			¥¿ª©µn¤J = new String(configuration.getString("¥¿ª©µn¤J³B"));
-			µsª©µn¤J = new String(configuration.getString("µsª©µn¤J³B"));
+			æ­£ç‰ˆç™»å…¥ = new String(configuration.getString("æ­£ç‰ˆç™»å…¥è™•"));
+			ç›œç‰ˆç™»å…¥ = new String(configuration.getString("ç›œç‰ˆç™»å…¥è™•"));
 			configuration = null;
 		} catch (IOException e) {
 			throw new RuntimeException("load config error!", e);
