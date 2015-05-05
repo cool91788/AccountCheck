@@ -1,11 +1,15 @@
-¦¹´¡¥ó¬°Install©Ò¼¶¼g¡A­^¤å¦WºÙ¬°"AccountCheck"¡A¤¤¤å¦WºÙ¬°¡u¥b¥¿ª©ÅçÃÒ´¡¥ó¡v¡C
-Åı¥¿ª©©Mµsª©ª±®a¥Î¤£¦Pªº¤è¦¡µn¤J¦øªA¾¹¡C
-¥»µ{¦¡¨ü¨ìGPLv3¨óÄ³«O»Ù¡A¦p¦³¥ô¦óºÃ°İ½Ğ¬¢cool9035963@gmail.com
+æ­¤æ’ä»¶ç‚ºInstallæ‰€æ’°å¯«ï¼Œè‹±æ–‡åç¨±ç‚º"AccountCheck"ï¼Œä¸­æ–‡åç¨±ç‚ºã€ŒåŠæ­£ç‰ˆé©—è­‰æ’ä»¶ã€ã€‚
+è®“æ­£ç‰ˆå’Œç›œç‰ˆç©å®¶ç”¨ä¸åŒçš„æ–¹å¼ç™»å…¥ä¼ºæœå™¨ã€‚
+æœ¬ç¨‹å¼å—åˆ°GPLv3å”è­°ä¿éšœï¼Œå¦‚æœ‰ä»»ä½•ç–‘å•è«‹æ´½cool9035963@gmail.com
 =====================================================================================================
-This plugin is write by Install , it call "AccountCheck". Chinese name is "¥b¥¿ª©ÅçÃÒ´¡¥ó".
+This plugin is write by Install , it call "AccountCheck". Chinese name is "åŠæ­£ç‰ˆé©—è­‰æ’ä»¶".
 It make the online-mode/offline-mode players use different way to login the server.
 This program use GPLv3 , if any problem please mail to cool9035963@gmail.com
 
 My English is very poor :(
 If want mail to me , Chinese is better  :P
+======================================================================================================
+
+æœ¬æ’ä»¶ç·¨è­¯ç’°å¢ƒç‚ºJava 1.8ç‰ˆæœ¬ã€‚
+
 ======================================================================================================
