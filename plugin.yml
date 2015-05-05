@@ -1,4 +1,4 @@
 name: AccountCheck
-main: install.java.accountcheck.ExecuteMain
+main: install.java.accountcheck.AccountCheck
 version: 1.4
 author: Install
