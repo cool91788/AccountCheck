@@ -16,9 +16,9 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package install.java.accountcheck;
+package install.java.accountcheck.accountinfo;
 
-public class ExecuteMain {
+class ExecuteMain {
 	public static void main(String[] args) {
 		System.out.println(new GetAccountInfo().getHttp(args[0]));
 	}

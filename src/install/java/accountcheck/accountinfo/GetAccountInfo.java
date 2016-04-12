@@ -16,27 +16,29 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package install.java.accountcheck;
+package install.java.accountcheck.accountinfo;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import install.java.accountcheck.AccountCheck;
+
 public class GetAccountInfo{
  	
-	public int getHttp(String http) {
+	int getHttp(String http) {
 		try {
-			Object obj = new URL(http).openConnection();
-			((URLConnection)obj).setConnectTimeout(2000);
-			((URLConnection)obj).setReadTimeout(2000);
-			Object obj2 = new BufferedReader(new InputStreamReader(
-					((URLConnection)obj).getInputStream(), "UTF-8"));
-			String message = ((BufferedReader)obj2).readLine();
-			((HttpsURLConnection)obj).disconnect();
-			((BufferedReader)obj2).close();
+			URLConnection url = new URL(http).openConnection();
+			url.setConnectTimeout(2000);
+			url.setReadTimeout(2000);
+			BufferedReader bf = new BufferedReader(new InputStreamReader(url.getInputStream(), "UTF-8"));
+			String message = bf.readLine();
+			((HttpsURLConnection)url).disconnect();
+			bf.close();
 			
 			if(message.equals("false")) {
 				return 0;
@@ -50,5 +52,19 @@ public class GetAccountInfo{
 			exception.printStackTrace();
 			return 101;
 		}
+	}
+	public static int getInfo(String playername) {
+		try {
+			Process process = Runtime.getRuntime().exec(AccountCheck.getMainPluginObj().getExecuteFolder() 
+					+ "https://minecraft.net/haspaid.jsp?user=" + playername);
+			BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			String getoutput = br.readLine();
+			br.close();
+			process.waitFor(); 
+			return Integer.parseInt(getoutput);
+			
+		} catch (IOException e1) {e1.printStackTrace();
+		} catch (InterruptedException e) {e.printStackTrace();}
+			return 1289616;
 	}
 }

@@ -19,9 +19,13 @@
 package install.java.accountcheck;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
+import java.util.logging.Logger;
 
+import install.java.accountcheck.command.AccountCheckCommand;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
@@ -30,16 +34,35 @@ import net.md_5.bungee.config.YamlConfiguration;
 
 public class AccountCheck extends Plugin {
 	
-	static String originalLoginServer;	//正版登入伺服器
-	static String pirateLoginServer;	//盜版登入伺服器
-	static String executeFolder;		//這個jar的目錄
-	static Plugin mainPluginObj;		//指向這個class的物件
-	final static String VERSION = "1.4";
+	private AccountCheckLogger logger;//自訂log格式
+	private String genuineLoginServer;	//正版登入伺服器
+	private String piracyLoginServer;	//盜版登入伺服器
+	private String executeFolder;		//這個jar的目錄
+	private static AccountCheck mainPluginObj;		//指向這個class的物件
+	private boolean piracyAccess = false;//是否開放盜版玩家進入
+	public final static String VERSION = "1.5.1";
+	
+	public static AccountCheck getMainPluginObj() {return mainPluginObj;}
+	public String getGenuineLoginServer() {return genuineLoginServer;}
+	public String getPiracyLoginServer() {return piracyLoginServer;}
+	public String getExecuteFolder() {return executeFolder;}
+	public boolean isEnablePiracy() {return piracyAccess;}
+	
+	public void setEnablePiracy(boolean piracyAccess) {this.piracyAccess = piracyAccess;}
+	public void setGenuineLoginServer(String genuineLoginServer) {this.genuineLoginServer = genuineLoginServer;}
+	public void setPiracyLoginServer(String piracyLoginServer) {this.piracyLoginServer = piracyLoginServer;}
+	
+	@Override
+	public Logger getLogger() {return logger;}
+	
 
 	@Override
 	public void onEnable() {
 		//把這個class的位址放到 mainPluginObj 儲存
 		mainPluginObj = this;
+		
+		//自訂log格式
+		logger = new AccountCheckLogger(this);
 		
 		//檢查以及設定設定檔
 		setConfig();
@@ -50,12 +73,12 @@ public class AccountCheck extends Plugin {
 			getLogger().info(ChatColor.RED + "由於未通過環境檢查，故本插件暫時停止運作。" + ChatColor.YELLOW + "修正錯誤後重起方可使用。");
 		else {
 			getProxy().getPluginManager().registerListener(this, new CreateListener());
-			getProxy().getPluginManager().registerCommand(this, new AccountCheckCommand(getDataFolder()));
+			getProxy().getPluginManager().registerCommand(this, new AccountCheckCommand(new File(getDataFolder(), "config.yml")));
 		}
 		getLogger().info(ChatColor.RED + "版本：v" + VERSION);
 	}
 	
-	public boolean checkEnvironment() {
+	boolean checkEnvironment() {
 		getLogger().info("檢查環境中。。。");
 		
 		File executefile = new File(System.getProperty("user.dir") + System.getProperty("file.separator") 
@@ -67,11 +90,10 @@ public class AccountCheck extends Plugin {
 			return true;
 		}
 		getLogger().info("完成！");
-		executefile = null;
 		return false;
 	}
 	
-	public void setConfig() {
+	void setConfig() {
 		if (!getDataFolder().exists()) {
 			getDataFolder().mkdir();
 		}
@@ -86,17 +108,18 @@ public class AccountCheck extends Plugin {
 				throw new RuntimeException("Can't create the config file! ", e);
 			}
 		}
-		file = null;
 	}
 	
-	public void loadConfig() {
+	void loadConfig() {
 		try {
-			Configuration configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(getDataFolder(), "config.yml"));
-			originalLoginServer = new String(configuration.getString("正版登入處"));
-			pirateLoginServer = new String(configuration.getString("盜版登入處"));
-			configuration = null;
+			Configuration configuration = ConfigurationProvider.getProvider(YamlConfiguration.class)
+					.load(new InputStreamReader(new FileInputStream(new File(getDataFolder(), "config.yml")), "UTF-8"));
+			genuineLoginServer = configuration.getString("正版登入處");
+			piracyLoginServer = configuration.getString("盜版登入處");
+			piracyAccess = configuration.getBoolean("盜版進入許可");
 		} catch (IOException e) {
 			throw new RuntimeException("load config error!", e);
 		}
 	}
+	
 }

@@ -18,6 +18,9 @@
 
 package install.java.accountcheck;
 
+import install.java.accountcheck.listener.PostLoginListener;
+import install.java.accountcheck.listener.PreLoginListener;
+import install.java.accountcheck.log.AccountCheckLog;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.event.PreLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
@@ -25,24 +28,16 @@ import net.md_5.bungee.event.EventHandler;
 
 public class CreateListener implements Listener {
 	
+	private AccountCheckLog accountCheckLog = new AccountCheckLog();
+	
 	@EventHandler
 	public void chooseServer(PostLoginEvent loginevent) {
-		
-		//嘗試建立一個新的執行緒來執行，並等待6秒鐘
-		AccountCheck.mainPluginObj.getProxy().getScheduler().runAsync(AccountCheck.mainPluginObj, 
-				new ListenerThread(loginevent));
-		try {Thread.sleep(6000);}
-		catch (InterruptedException e) {e.printStackTrace();}
+		new PostLoginListener().postLoginCheck(loginevent, accountCheckLog);
 	}
 
 	@EventHandler
 	public void chooseOnlineMode(PreLoginEvent loginevent) {
-		
-		//嘗試建立一個新的執行緒來執行，並等待6秒鐘
-		AccountCheck.mainPluginObj.getProxy().getScheduler().runAsync(AccountCheck.mainPluginObj, 
-				new ListenerThread(loginevent));
-		try {Thread.sleep(6000);}
-		catch (InterruptedException e) {e.printStackTrace();}
+		new PreLoginListener().preLoginCheck(loginevent, accountCheckLog);
 	}
 	
 }
