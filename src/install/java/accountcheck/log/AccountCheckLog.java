@@ -1,3 +1,21 @@
+/*
+ * 	AccountCheck (åŠæ­£ç‰ˆé©—è­‰) - A BungeeCord plugin
+ *	Copyright (C) 2016  Install
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 package install.java.accountcheck.log;
 
 import install.java.accountcheck.AccountCheck;
@@ -8,41 +26,41 @@ public class AccountCheckLog {
 		ip = ip.substring(1, ip.indexOf(':'));
 		switch(msgnum) {
 		case 0:
-			AccountCheck.getMainPluginObj().getLogger().info(ChatColor.GREEN + "[" + ChatColor.YELLOW  +"°T®§" 
-					+ ChatColor.GREEN + "] " + ChatColor.YELLOW + "µsª©ª±®a¡G" + name + ChatColor.GREEN + "¡A¨Ó¦Û¡G" 
-					+ ChatColor.RED + ip + ChatColor.YELLOW + "¡Cµn¤J¡I");
+			AccountCheck.getMainPluginObj().getLogger().info(ChatColor.GREEN + "[" + ChatColor.YELLOW  +"è¨Šæ¯" 
+					+ ChatColor.GREEN + "] " + ChatColor.YELLOW + "ç›œç‰ˆç©å®¶ï¼š" + name + ChatColor.GREEN + "ï¼Œä¾†è‡ªï¼š" 
+					+ ChatColor.RED + ip + ChatColor.YELLOW + "ã€‚ç™»å…¥ï¼");
 			break;
 		case 1:
-			AccountCheck.getMainPluginObj().getLogger().info(ChatColor.GREEN + "[" + ChatColor.YELLOW  +"°T®§" 
-					+ ChatColor.GREEN + "] " + ChatColor.YELLOW + "¥¿ª©ª±®a¡G" + name + ChatColor.GREEN + "¡A¨Ó¦Û¡G" 
-					+ ChatColor.RED + ip + ChatColor.YELLOW + "¡Cµn¤J¡I");
+			AccountCheck.getMainPluginObj().getLogger().info(ChatColor.GREEN + "[" + ChatColor.YELLOW  +"è¨Šæ¯" 
+					+ ChatColor.GREEN + "] " + ChatColor.YELLOW + "æ­£ç‰ˆç©å®¶ï¼š" + name + ChatColor.GREEN + "ï¼Œä¾†è‡ªï¼š" 
+					+ ChatColor.RED + ip + ChatColor.YELLOW + "ã€‚ç™»å…¥ï¼");
 			break;
 		case 2:
-			AccountCheck.getMainPluginObj().getLogger().info(ChatColor.GREEN + "[" + ChatColor.YELLOW  +"°T®§" 
-					+ ChatColor.GREEN + "] " + "µsª©ª±®a¡G" + name + "¡A¨Ó¦Û¡G" 
-					+ ChatColor.RED + ip  + ChatColor.GREEN + "¡C¹Á¸Õ³sµ²¡C");
+			AccountCheck.getMainPluginObj().getLogger().info(ChatColor.GREEN + "[" + ChatColor.YELLOW  +"è¨Šæ¯" 
+					+ ChatColor.GREEN + "] " + "ç›œç‰ˆç©å®¶ï¼š" + name + "ï¼Œä¾†è‡ªï¼š" 
+					+ ChatColor.RED + ip  + ChatColor.GREEN + "ã€‚å˜—è©¦é€£çµã€‚");
 			break;
 		case 3:
-			AccountCheck.getMainPluginObj().getLogger().info(ChatColor.GREEN + "[" + ChatColor.YELLOW  +"°T®§" 
-					+ ChatColor.GREEN + "] " + "¥¿ª©ª±®a¡G" + name + "¡A¨Ó¦Û¡G" 
-					+ ChatColor.RED + ip  + ChatColor.GREEN + "¡C¹Á¸Õ³sµ²¡C");
+			AccountCheck.getMainPluginObj().getLogger().info(ChatColor.GREEN + "[" + ChatColor.YELLOW  +"è¨Šæ¯" 
+					+ ChatColor.GREEN + "] " + "æ­£ç‰ˆç©å®¶ï¼š" + name + "ï¼Œä¾†è‡ªï¼š" 
+					+ ChatColor.RED + ip  + ChatColor.GREEN + "ã€‚å˜—è©¦é€£çµã€‚");
 			break;
 		case 4:
-			AccountCheck.getMainPluginObj().getLogger().info(ChatColor.GREEN + "[" + ChatColor.YELLOW  +"°T®§" 
-					+ ChatColor.GREEN + "] " + "µsª©ª±®a¡G" + name + "¡A¨Ó¦Û¡G" 
-					+ ChatColor.RED + ip  + ChatColor.GREEN + "¡C®Ú¾Ú³W«h¡A¼È®É©Úµ´µsª©¶i¤J¡C");
+			AccountCheck.getMainPluginObj().getLogger().info(ChatColor.GREEN + "[" + ChatColor.YELLOW  +"è¨Šæ¯" 
+					+ ChatColor.GREEN + "] " + "ç›œç‰ˆç©å®¶ï¼š" + name + "ï¼Œä¾†è‡ªï¼š" 
+					+ ChatColor.RED + ip  + ChatColor.GREEN + "ã€‚æ ¹æ“šè¦å‰‡ï¼Œæš«æ™‚æ‹’çµ•ç›œç‰ˆé€²å…¥ã€‚");
 			break;
 		case 100:
-			AccountCheck.getMainPluginObj().getLogger().warning(ChatColor.GREEN + "[" + ChatColor.RED  + "¿ù»~" 
-					+ ChatColor.GREEN + "] " + ChatColor.RED + " µo¥Í¿ù»~¥N½X¬°\"100\"ªº¿ù»~¡I");
+			AccountCheck.getMainPluginObj().getLogger().warning(ChatColor.GREEN + "[" + ChatColor.RED  + "éŒ¯èª¤" 
+					+ ChatColor.GREEN + "] " + ChatColor.RED + " ç™¼ç”ŸéŒ¯èª¤ä»£ç¢¼ç‚º\"100\"çš„éŒ¯èª¤ï¼");
 			break;
 		case 101:
-			AccountCheck.getMainPluginObj().getLogger().warning(ChatColor.GREEN + "[" + ChatColor.RED  + "¿ù»~" 
-					+ ChatColor.GREEN + "] " + ChatColor.RED + " ºô­¶¶}±Ò©ÎÃö³¬¿ù»~¡I");
+			AccountCheck.getMainPluginObj().getLogger().warning(ChatColor.GREEN + "[" + ChatColor.RED  + "éŒ¯èª¤" 
+					+ ChatColor.GREEN + "] " + ChatColor.RED + " ç¶²é é–‹å•Ÿæˆ–é—œé–‰éŒ¯èª¤ï¼");
 			break;
 		default:
-			AccountCheck.getMainPluginObj().getLogger().warning(ChatColor.GREEN + "[" + ChatColor.RED  + "¿ù»~" 
-					+ ChatColor.GREEN + "] " + ChatColor.RED + " µo¥Í¥¼ª¾¿ù»~¡I");
+			AccountCheck.getMainPluginObj().getLogger().warning(ChatColor.GREEN + "[" + ChatColor.RED  + "éŒ¯èª¤" 
+					+ ChatColor.GREEN + "] " + ChatColor.RED + " ç™¼ç”ŸæœªçŸ¥éŒ¯èª¤ï¼");
 		}
 	}
 }

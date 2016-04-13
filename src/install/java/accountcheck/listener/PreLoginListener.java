@@ -1,3 +1,21 @@
+/*
+ * 	AccountCheck (åŠæ­£ç‰ˆé©—è­‰) - A BungeeCord plugin
+ *	Copyright (C) 2016  Install
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 package install.java.accountcheck.listener;
 
 import install.java.accountcheck.AccountCheck;
@@ -28,15 +46,15 @@ public class PreLoginListener {
 			break;
 		case 100:
 			log.log(100, playername, ip);
-			preloginevent.getConnection().disconnect(TextComponent.fromLegacyText(ChatColor.RED + "µn¤J¥¢±Ñ¡I½Ğµy«á¦A¹Á¸Õ¡C ¿ù»~¥N½X¡G100"));
+			preloginevent.getConnection().disconnect(TextComponent.fromLegacyText(ChatColor.RED + "ç™»å…¥å¤±æ•—ï¼è«‹ç¨å¾Œå†å˜—è©¦ã€‚ éŒ¯èª¤ä»£ç¢¼ï¼š100"));
 			break;
 		case 101:
 			log.log(101, playername, ip);
-			preloginevent.getConnection().disconnect(TextComponent.fromLegacyText(ChatColor.RED + "µn¤J¥¢±Ñ¡I½Ğµy«á¦A¹Á¸Õ¡C ¿ù»~¥N½X¡G101"));
+			preloginevent.getConnection().disconnect(TextComponent.fromLegacyText(ChatColor.RED + "ç™»å…¥å¤±æ•—ï¼è«‹ç¨å¾Œå†å˜—è©¦ã€‚ éŒ¯èª¤ä»£ç¢¼ï¼š101"));
 			break;
 		default:
 			log.log(1000, playername, ip);
-			preloginevent.getConnection().disconnect(TextComponent.fromLegacyText(ChatColor.RED + "µo¥Í¤£©ú¿ù»~¡I"));
+			preloginevent.getConnection().disconnect(TextComponent.fromLegacyText(ChatColor.RED + "ç™¼ç”Ÿä¸æ˜éŒ¯èª¤ï¼"));
 		}
 	}
 }

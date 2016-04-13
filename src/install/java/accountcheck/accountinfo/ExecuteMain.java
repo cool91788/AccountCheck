@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 	AccountCheck (半正版驗證) - A BungeeCord plugin
  *	Copyright (C) 2014  Install
  *
