@@ -20,7 +20,7 @@ package install.java.accountcheck.accountinfo;
 
 class ExecuteMain {
 	public static void main(String[] args) {
-		System.out.println(new GetAccountInfo().getHttp(args[0]));
+		new GetAccountInfo().getHttp(args[0]);
 	}
 
 }

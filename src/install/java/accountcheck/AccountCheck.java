@@ -40,7 +40,7 @@ public class AccountCheck extends Plugin {
 	private String executeFolder;		//這個jar的目錄
 	private static AccountCheck mainPluginObj;		//指向這個class的物件
 	private boolean piracyAccess = false;//是否開放盜版玩家進入
-	public final static String VERSION = "1.5.1";
+	public final static String VERSION = "1.5.2";
 	
 	public static AccountCheck getMainPluginObj() {return mainPluginObj;}
 	public String getGenuineLoginServer() {return genuineLoginServer;}

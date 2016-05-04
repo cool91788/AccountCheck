@@ -52,10 +52,6 @@ public class AccountCheckLog {
 			break;
 		case 100:
 			AccountCheck.getMainPluginObj().getLogger().warning(ChatColor.GREEN + "[" + ChatColor.RED  + "錯誤" 
-					+ ChatColor.GREEN + "] " + ChatColor.RED + " 發生錯誤代碼為\"100\"的錯誤！");
-			break;
-		case 101:
-			AccountCheck.getMainPluginObj().getLogger().warning(ChatColor.GREEN + "[" + ChatColor.RED  + "錯誤" 
 					+ ChatColor.GREEN + "] " + ChatColor.RED + " 網頁開啟或關閉錯誤！");
 			break;
 		default:

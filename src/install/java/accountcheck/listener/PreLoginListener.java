@@ -48,10 +48,6 @@ public class PreLoginListener {
 			log.log(100, playername, ip);
 			preloginevent.getConnection().disconnect(TextComponent.fromLegacyText(ChatColor.RED + "登入失敗！請稍後再嘗試。 錯誤代碼：100"));
 			break;
-		case 101:
-			log.log(101, playername, ip);
-			preloginevent.getConnection().disconnect(TextComponent.fromLegacyText(ChatColor.RED + "登入失敗！請稍後再嘗試。 錯誤代碼：101"));
-			break;
 		default:
 			log.log(1000, playername, ip);
 			preloginevent.getConnection().disconnect(TextComponent.fromLegacyText(ChatColor.RED + "發生不明錯誤！"));

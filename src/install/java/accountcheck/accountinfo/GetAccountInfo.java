@@ -19,52 +19,69 @@
 package install.java.accountcheck.accountinfo;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.net.URLConnection;
+import java.util.StringTokenizer;
 
 import javax.net.ssl.HttpsURLConnection;
-
 import install.java.accountcheck.AccountCheck;
+import net.md_5.bungee.api.ChatColor;
 
 public class GetAccountInfo{
  	
-	int getHttp(String http) {
+	void getHttp(String http) {
 		try {
-			URLConnection url = new URL(http).openConnection();
+			HttpsURLConnection url = (HttpsURLConnection)new URL(http).openConnection();
 			url.setConnectTimeout(2000);
 			url.setReadTimeout(2000);
 			BufferedReader bf = new BufferedReader(new InputStreamReader(url.getInputStream(), "UTF-8"));
-			String message = bf.readLine();
+			if(url.getResponseCode()==204) {
+				// do nothing...
+			}else {
+				String message = bf.readLine();
+				if(message != null)
+					System.out.println(message);
+			}
 			((HttpsURLConnection)url).disconnect();
 			bf.close();
 			
-			if(message.equals("false")) {
-				return 0;
-			} else if(message.equals("true")) {
-				return 1;
-			} else {
-				return 100;
-			}
-			
 		} catch (Exception exception) {
 			exception.printStackTrace();
-			return 101;
 		}
 	}
 	public static int getInfo(String playername) {
 		try {
 			Process process = Runtime.getRuntime().exec(AccountCheck.getMainPluginObj().getExecuteFolder() 
-					+ "https://minecraft.net/haspaid.jsp?user=" + playername);
+					+ "https://api.mojang.com/users/profiles/minecraft/" + playername);
 			BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
-			String getoutput = br.readLine();
+			BufferedReader brErr = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+			String errMsg, msg;
+			int returnValue = -1;
+			if((errMsg = brErr.readLine()) != null) {
+				do {
+					AccountCheck.getMainPluginObj().getLogger().warning(ChatColor.GREEN + "[" + ChatColor.RED  + "網頁查詢錯誤" 
+							+ ChatColor.GREEN + "] " + ChatColor.RESET + errMsg);
+				}while((errMsg = brErr.readLine()) != null);
+				returnValue = 100;
+			}else {
+				if((msg = br.readLine()) == null) {
+					returnValue = 0;
+				}else {
+					StringTokenizer st = new StringTokenizer(msg, "{},:");
+					while(st.hasMoreTokens()) {
+						if(st.nextToken().equals("\"name\""))
+							returnValue = st.nextToken().replaceAll("\"", "").equals(playername) ? 1 : 0;
+					}
+				}
+			}
 			br.close();
+			brErr.close();
 			process.waitFor(); 
-			return Integer.parseInt(getoutput);
+			return returnValue;
 			
-		} catch (IOException e1) {e1.printStackTrace();
-		} catch (InterruptedException e) {e.printStackTrace();}
+		} catch (Exception exception) {
+			exception.printStackTrace();
 			return 1289616;
+		}
 	}
 }
