@@ -19,8 +19,10 @@
 package install.java.accountcheck.listener;
 
 import install.java.accountcheck.AccountCheck;
+import install.java.accountcheck.accountinfo.AccountInfo;
 import install.java.accountcheck.accountinfo.GetAccountInfo;
 import install.java.accountcheck.log.AccountCheckLog;
+import install.java.accountcheck.log.LogType;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.event.PreLoginEvent;
@@ -29,27 +31,37 @@ public class PreLoginListener {
 	public void preLoginCheck(PreLoginEvent preloginevent, AccountCheckLog log) {
 		String playername = preloginevent.getConnection().getName();
 		String ip = preloginevent.getConnection().getAddress().toString();
-		int prechecknumber = GetAccountInfo.getInfo(playername);
-		switch(prechecknumber) {
-		case 0:
-			log.log(2, playername, ip);
-			if(AccountCheck.getMainPluginObj().isEnablePiracy())
+		AccountInfo accountInfo = GetAccountInfo.getInfo(playername);
+		switch(accountInfo) {
+		case PIRATED_ACCOUNT:
+			log.log(LogType.PIRATED_ACCOUNT_CONNECT, playername, ip);
+			if(AccountCheck.getMainPluginObj().isEnablePirated())
 				preloginevent.getConnection().setOnlineMode(false);
 			else {
+				log.log(LogType.REJECT_PIRATED_ACCOUNT_LOGIN, playername, ip);
 				preloginevent.getConnection().setOnlineMode(true);
-				log.log(4, playername, ip);
 			}
 			break;
-		case 1:
-			log.log(3, playername, ip);
+		case PIRATED_ACCOUNT_CASE_INSENSITIVE:
+			log.log(LogType.PIRATED_ACCOUNT_CONNECT, playername, ip);
+			if(AccountCheck.getMainPluginObj().isEnablePirated() && AccountCheck.getMainPluginObj().isCaseSensitive())
+				preloginevent.getConnection().setOnlineMode(false);
+			else {
+				log.log(LogType.REJECT_PIRATED_ACCOUNT_LOGIN, playername, ip);
+				preloginevent.getConnection().setOnlineMode(true);
+			}
+			break;
+		case GENUINE_ACCOUNT:
+			log.log(LogType.GENUINE_ACCOUNT_CONNECT, playername, ip);
 			preloginevent.getConnection().setOnlineMode(true);
 			break;
-		case 100:
-			log.log(100, playername, ip);
-			preloginevent.getConnection().disconnect(TextComponent.fromLegacyText(ChatColor.RED + "登入失敗！請稍後再嘗試。 錯誤代碼：100"));
+		case HTTP_ERROR:
+			log.log(LogType.HTTP_ERROR, playername, ip);
+			preloginevent.getConnection().disconnect(TextComponent.fromLegacyText(
+					ChatColor.RED + "登入失敗！請稍後再嘗試。 錯誤代碼：" + LogType.HTTP_ERROR.getErrorCode()));
 			break;
 		default:
-			log.log(1000, playername, ip);
+			log.log(LogType.UNKNOWN_ERROR, playername, ip);
 			preloginevent.getConnection().disconnect(TextComponent.fromLegacyText(ChatColor.RED + "發生不明錯誤！"));
 		}
 	}

@@ -3,6 +3,9 @@
 此插建目前只提供繁體中文界面。
 This plugin is only provide Chinese(Traditional) interface now.
 
+原始碼可以在 [GitHub](https://github.com/cool91788/AccountCheck) 取得
+Source code is currently available on [GitHub](https://github.com/cool91788/AccountCheck).
+
 =====================================================================================================
 
 此插件為Install所撰寫，英文名稱為"AccountCheck"，中文名稱為「半正版驗證插件」。

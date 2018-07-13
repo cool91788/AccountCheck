@@ -1,3 +1,4 @@
-正版登入處: 'lobby2'
-盜版登入處: 'lobby'
+正版登入處: GenuineLoginServer
+盜版登入處: PiratedLoginServer
 盜版進入許可: false
+區分大小寫: true

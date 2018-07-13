@@ -49,28 +49,33 @@ public class GetAccountInfo{
 			exception.printStackTrace();
 		}
 	}
-	public static int getInfo(String playername) {
+	public static AccountInfo getInfo(String playername) {
 		try {
 			Process process = Runtime.getRuntime().exec(AccountCheck.getMainPluginObj().getExecuteFolder() 
 					+ "https://api.mojang.com/users/profiles/minecraft/" + playername);
 			BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
 			BufferedReader brErr = new BufferedReader(new InputStreamReader(process.getErrorStream()));
 			String errMsg, msg;
-			int returnValue = -1;
+			AccountInfo returnValue = AccountInfo.UNKNOWN_ERROR;
 			if((errMsg = brErr.readLine()) != null) {
 				do {
 					AccountCheck.getMainPluginObj().getLogger().warning(ChatColor.GREEN + "[" + ChatColor.RED  + "網頁查詢錯誤" 
 							+ ChatColor.GREEN + "] " + ChatColor.RESET + errMsg);
 				}while((errMsg = brErr.readLine()) != null);
-				returnValue = 100;
+				returnValue = AccountInfo.HTTP_ERROR;
 			}else {
 				if((msg = br.readLine()) == null) {
-					returnValue = 0;
+					returnValue = AccountInfo.PIRATED_ACCOUNT;
 				}else {
 					StringTokenizer st = new StringTokenizer(msg, "{},:");
 					while(st.hasMoreTokens()) {
-						if(st.nextToken().equals("\"name\""))
-							returnValue = st.nextToken().replaceAll("\"", "").equals(playername) ? 1 : 0;
+						if(st.nextToken().equals("\"name\"")) {
+							String returnedName = st.nextToken().replaceAll("\"", "");
+							returnValue = returnedName.toLowerCase().equals(playername.toLowerCase()) ? 
+									AccountInfo.PIRATED_ACCOUNT_CASE_INSENSITIVE : AccountInfo.PIRATED_ACCOUNT;
+							if(returnedName.equals(playername))
+								returnValue = AccountInfo.GENUINE_ACCOUNT;
+						}
 					}
 				}
 			}
@@ -81,7 +86,7 @@ public class GetAccountInfo{
 			
 		} catch (Exception exception) {
 			exception.printStackTrace();
-			return 1289616;
+			return AccountInfo.UNKNOWN_ERROR;
 		}
 	}
 }

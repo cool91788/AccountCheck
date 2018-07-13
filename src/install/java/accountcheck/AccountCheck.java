@@ -36,21 +36,26 @@ public class AccountCheck extends Plugin {
 	
 	private AccountCheckLogger logger;//自訂log格式
 	private String genuineLoginServer;	//正版登入伺服器
-	private String piracyLoginServer;	//盜版登入伺服器
+	private String piratedLoginServer;	//盜版登入伺服器
 	private String executeFolder;		//這個jar的目錄
 	private static AccountCheck mainPluginObj;		//指向這個class的物件
-	private boolean piracyAccess = false;//是否開放盜版玩家進入
-	public final static String VERSION = "1.5.3";
+	private boolean piratedAccess = false;//是否開放盜版玩家進入，預設關閉。
+	private boolean caseSensitive = true;	//當值為 "true" 時，若玩家名稱與正版名稱拼寫相同（大小寫不同）時，則視為盜版玩家且「關閉」正版驗證。
+											//當值為 "false" 時，若玩家名稱與正版名稱拼寫相同（大小寫不同）時，則視為盜版玩家且「開啟」正版驗證（拒絕進入）。
+											//預設為true。
+	public final static String VERSION = "1.6";
 	
 	public static AccountCheck getMainPluginObj() {return mainPluginObj;}
 	public String getGenuineLoginServer() {return genuineLoginServer;}
-	public String getPiracyLoginServer() {return piracyLoginServer;}
+	public String getPiratedLoginServer() {return piratedLoginServer;}
 	public String getExecuteFolder() {return executeFolder;}
-	public boolean isEnablePiracy() {return piracyAccess;}
+	public boolean isEnablePirated() {return piratedAccess;}
+	public boolean isCaseSensitive()  {return caseSensitive;}
 	
-	public void setEnablePiracy(boolean piracyAccess) {this.piracyAccess = piracyAccess;}
+	public void setEnablePirated(boolean piratedAccess) {this.piratedAccess = piratedAccess;}
+	public void setCaseSensitive(boolean caseSensitive) {this.caseSensitive = caseSensitive;}
 	public void setGenuineLoginServer(String genuineLoginServer) {this.genuineLoginServer = genuineLoginServer;}
-	public void setPiracyLoginServer(String piracyLoginServer) {this.piracyLoginServer = piracyLoginServer;}
+	public void setPiratedLoginServer(String piratedLoginServer) {this.piratedLoginServer = piratedLoginServer;}
 	
 	@Override
 	public Logger getLogger() {return logger;}
@@ -114,9 +119,11 @@ public class AccountCheck extends Plugin {
 		try {
 			Configuration configuration = ConfigurationProvider.getProvider(YamlConfiguration.class)
 					.load(new InputStreamReader(new FileInputStream(new File(getDataFolder(), "config.yml")), "UTF-8"));
-			genuineLoginServer = configuration.getString("正版登入處");
-			piracyLoginServer = configuration.getString("盜版登入處");
-			piracyAccess = configuration.getBoolean("盜版進入許可");
+			genuineLoginServer = configuration.getString("正版登入處", "GenuineLoginServer");
+			piratedLoginServer = configuration.getString("盜版登入處", "PiratedLoginServer");
+			piratedAccess = configuration.getBoolean("盜版進入許可", false);
+			caseSensitive = configuration.getBoolean("區分大小寫", true);
+			
 		} catch (IOException e) {
 			throw new RuntimeException("load config error!", e);
 		}
