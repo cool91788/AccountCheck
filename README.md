@@ -26,6 +26,7 @@ If want mail to me , Chinese is better  :P
 - 使用資料庫來達成快速搜索，但必須考慮官方的更名系統。（可選選項）
 - 考慮新增proxy server清單選擇流量方向，不再單一限制兩個
 - <構想>新增管制內部跳proxy server的正盜版驗證（基於玩家ID，因登錄時已透過online mode篩選正版ID）
+- AccountCheck這個class中executeFolder變數重新命名
    
    
 # How to build  如何編譯   
