@@ -20,15 +20,20 @@
 
 package install.java.accountcheck.log;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public enum LogType {
-	PIRATED_ACCOUNT_LOGIN(0),
-	PIRATED_ACCOUNT_CONNECT(1),
-	GENUINE_ACCOUNT_LOGIN(2),
-	GENUINE_ACCOUNT_CONNECT(3),
-	REJECT_PIRATED_ACCOUNT_LOGIN(4),
-	HTTP_ERROR(100),
-	UNKNOWN_ERROR(-1);
-	private int errorCode;
-	public int getErrorCode() {return errorCode;}
-	LogType(int errorCode) {this.errorCode = errorCode;}
+	PLAYER_CONNECT(1),	// LogArgs format String[] {name, ip}
+	PIRATED_ACCOUNT_LOGIN(10),	// LogArgs format String[] {name, ip}
+	GENUINE_ACCOUNT_LOGIN(11),	// LogArgs format String[] {name, ip}
+	REJECT_LOGIN(12),	// LogArgs format String[] {reason}
+	HTTP_ERROR(100),	// LogArgs format {null}
+	SERVER_DOWN(101),	// LogArgs format String[] {reason}
+	UNKNOWN_ERROR(-1);	// LogArgs format {null}
+	
+	@Getter
+	private final int errorCode;
 }

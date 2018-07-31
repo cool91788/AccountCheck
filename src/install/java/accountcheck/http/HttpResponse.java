@@ -18,11 +18,17 @@
  *   along with AccountCheck.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package install.java.accountcheck.accountinfo;
+package install.java.accountcheck.http;
 
-class ExecuteMain {
-	public static void main(String[] args) {
-		new GetAccountInfo().getHttp(args[0]);
-	}
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
+public class HttpResponse {
+	
+	@Getter
+	private final String response;
+	@Getter
+	private final boolean error;
 }

@@ -21,21 +21,14 @@ If want mail to me , Chinese is better  :P
    
    
 # Todo   
-- 當config file欄位有更動時，自動補足或是把舊有的備份起來用新的代替
-- config file設計盡可能考慮保持向下相容（或許不向下相容）
-- 使用資料庫來達成快速搜索，但必須考慮官方的更名系統。（可選選項）
 - 考慮新增proxy server清單選擇流量方向，不再單一限制兩個
 - <構想>新增管制內部跳proxy server的正盜版驗證（基於玩家ID，因登錄時已透過online mode篩選正版ID）
-- AccountCheck這個class中executeFolder變數重新命名
    
    
 # How to build  如何編譯   
    
-1. Need library : Bungeecord   
-   需要程式庫：Bungeecord   
+1. Need library : Bungeecord、lombok   
+   需要程式庫：Bungeecord、lombok   
 
-2. Choose the main class to install.java.accountcheck.accountinfo.ExecuteMain   
-   設定 Main class 為 install.java.accountcheck.accountinfo.ExecuteMain   
-
-3. Output the jar file named "AccountCheck.jar"   
-   輸出 jar 檔，名稱「AccountCheck.jar」   
+2. Output the jar file.   
+   輸出 jar 檔。   

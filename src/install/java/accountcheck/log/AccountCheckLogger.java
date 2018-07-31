@@ -18,28 +18,28 @@
  *   along with AccountCheck.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package install.java.accountcheck;
+package install.java.accountcheck.log;
 
-import install.java.accountcheck.listener.PostLoginListener;
-import install.java.accountcheck.listener.PreLoginListener;
-import install.java.accountcheck.log.AccountCheckLog;
-import net.md_5.bungee.api.event.PostLoginEvent;
-import net.md_5.bungee.api.event.PreLoginEvent;
-import net.md_5.bungee.api.plugin.Listener;
-import net.md_5.bungee.event.EventHandler;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
-public class CreateListener implements Listener {
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.plugin.Plugin;
+
+class AccountCheckLogger extends Logger {
 	
-	private AccountCheckLog accountCheckLog = new AccountCheckLog();
+	private final String pluginName;
 	
-	@EventHandler
-	public void chooseServer(PostLoginEvent loginevent) {
-		new PostLoginListener().postLoginCheck(loginevent, accountCheckLog);
+	protected AccountCheckLogger(Plugin plugin) {
+		super(plugin.getClass().getCanonicalName(), null);
+		   pluginName = ChatColor.GREEN + "[" + ChatColor.GOLD +
+				   plugin.getDescription().getName() + ChatColor.GREEN + "] " + ChatColor.RESET;
+	       setParent(plugin.getProxy().getLogger());
 	}
 
-	@EventHandler
-	public void chooseOnlineMode(PreLoginEvent loginevent) {
-		new PreLoginListener().preLoginCheck(loginevent, accountCheckLog);
+	@Override
+	public void log(LogRecord logRecord) {
+	    logRecord.setMessage(pluginName + logRecord.getMessage());
+	    super.log(logRecord);
 	}
-	
 }

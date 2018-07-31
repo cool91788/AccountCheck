@@ -18,27 +18,12 @@
  *   along with AccountCheck.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package install.java.accountcheck;
+package install.java.accountcheck.account;
 
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
-
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.plugin.Plugin;
-
-class AccountCheckLogger extends Logger {
-	
-	private final String pluginName;
-	
-	protected AccountCheckLogger(Plugin plugin) {
-		super(plugin.getClass().getCanonicalName(), null);
-		   pluginName = ChatColor.GOLD + "[" + ChatColor.GREEN + plugin.getDescription().getName() + ChatColor.GOLD + "] ";
-	       setParent(plugin.getProxy().getLogger());
-	}
-
-	@Override
-	public void log(LogRecord logRecord) {
-	    logRecord.setMessage(pluginName + logRecord.getMessage());
-	    super.log(logRecord);
-	}
+public enum AccountInfo {
+	PIRATED_ACCOUNT,	//盜版帳號 
+	PIRATED_ACCOUNT_CASE_INSENSITIVE,	//盜版帳號，不區分大小寫狀態下跟正版帳號拼寫相同
+	GENUINE_ACCOUNT,	//正版帳號
+	HTTP_ERROR,
+	UNKNOWN_ERROR;
 }

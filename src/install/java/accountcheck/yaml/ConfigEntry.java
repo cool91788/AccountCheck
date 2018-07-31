@@ -18,12 +18,19 @@
  *   along with AccountCheck.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package install.java.accountcheck.accountinfo;
+package install.java.accountcheck.yaml;
 
-public enum AccountInfo {
-	PIRATED_ACCOUNT,	//盜版帳號
-	PIRATED_ACCOUNT_CASE_INSENSITIVE,	//盜版帳號，不區分大小寫狀態下跟正版帳號拼寫相同
-	GENUINE_ACCOUNT,	//正版帳號
-	HTTP_ERROR,
-	UNKNOWN_ERROR;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+public enum ConfigEntry {
+	GENUINE_LOGIN_SERVER("genuine-login-server"),
+	PIRATED_LOGIN_SERVER("pirated-login-server"),
+	PIRATED_ACCESSIBLE("pirated-accessible"),
+	PING_INTERVAL("ping-interval");
+
+	@Getter
+	private final String entryName;
 }

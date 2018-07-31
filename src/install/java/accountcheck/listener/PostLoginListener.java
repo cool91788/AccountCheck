@@ -21,44 +21,57 @@
 package install.java.accountcheck.listener;
 
 import install.java.accountcheck.AccountCheck;
-import install.java.accountcheck.accountinfo.AccountInfo;
-import install.java.accountcheck.accountinfo.GetAccountInfo;
-import install.java.accountcheck.log.AccountCheckLog;
+import install.java.accountcheck.account.AccountInfo;
+import install.java.accountcheck.log.AccountCheckLogManager;
 import install.java.accountcheck.log.LogType;
+import install.java.accountcheck.yaml.Config;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.event.PostLoginEvent;
+import net.md_5.bungee.api.plugin.Listener;
+import net.md_5.bungee.event.EventHandler;
 
-public class PostLoginListener {
-	public void postLoginCheck(PostLoginEvent postloginevent, AccountCheckLog log) {
+public class PostLoginListener implements Listener{
+
+	@EventHandler
+	public void chooseServer(PostLoginEvent postloginevent) {
 		String playername = postloginevent.getPlayer().getName();
 		String ip = postloginevent.getPlayer().getAddress().toString();
-		AccountInfo accountInfo = GetAccountInfo.getInfo(playername);
+		ip = ip.substring(1, ip.lastIndexOf(':'));
+		Config config = AccountCheck.getInstance().getConfig();
+		AccountCheckLogManager logManager = AccountCheck.getInstance().getLogManager();
+		
+		AccountInfo accountInfo = (!config.isPiratedAccessible() || config.isForceOnlineMode()) ? AccountInfo.GENUINE_ACCOUNT :
+			AccountCheck.getInstance().getAccountManager().getInfo(postloginevent.getPlayer().getUniqueId(), playername, true);
+		
 		switch(accountInfo) {
-		case PIRATED_ACCOUNT:
-		case PIRATED_ACCOUNT_CASE_INSENSITIVE:
-			postloginevent.getPlayer().setReconnectServer(ProxyServer.getInstance().getServers()
-					.get(AccountCheck.getMainPluginObj().getPiratedLoginServer()));
-			ProxyServer.getInstance().getReconnectHandler().setServer(postloginevent.getPlayer());
-			log.log(LogType.PIRATED_ACCOUNT_LOGIN, playername, ip);
-			break;
-		case GENUINE_ACCOUNT:
-			postloginevent.getPlayer().setReconnectServer(ProxyServer.getInstance().getServers()
-					.get(AccountCheck.getMainPluginObj().getGenuineLoginServer()));
-			ProxyServer.getInstance().getReconnectHandler().setServer(postloginevent.getPlayer());
-			log.log(LogType.GENUINE_ACCOUNT_LOGIN, playername, ip);
-			postloginevent.getPlayer().sendMessage(ChatMessageType.CHAT, TextComponent.fromLegacyText(ChatColor.GREEN + "歡迎正版玩家登入！"));
-			break;
-		case HTTP_ERROR:
-			log.log(LogType.HTTP_ERROR, playername, ip);
-			postloginevent.getPlayer().disconnect(TextComponent.fromLegacyText(
-					ChatColor.RED + "登入失敗！請稍後再嘗試。 錯誤代碼："+ LogType.HTTP_ERROR.getErrorCode()));
-			break;
-		default:
-			log.log(LogType.UNKNOWN_ERROR, playername, ip);
-			postloginevent.getPlayer().disconnect(TextComponent.fromLegacyText(ChatColor.RED + "發生不明錯誤！"));
+			case PIRATED_ACCOUNT:
+				postloginevent.getPlayer().setReconnectServer(ProxyServer.getInstance().getServers()
+						.get(config.getPiratedLoginServer()));
+				ProxyServer.getInstance().getReconnectHandler().setServer(postloginevent.getPlayer());
+				logManager.log(LogType.PIRATED_ACCOUNT_LOGIN, new String[] {playername, ip});
+				break;
+			case PIRATED_ACCOUNT_CASE_INSENSITIVE:
+				logManager.log(LogType.REJECT_LOGIN, new String[] {playername, ip, "與正版名稱相同(不區分大小寫)"});
+				postloginevent.getPlayer().disconnect(TextComponent.fromLegacyText(ChatColor.GOLD + "._."));
+				break;
+			case GENUINE_ACCOUNT:
+				postloginevent.getPlayer().setReconnectServer(ProxyServer.getInstance().getServers()
+						.get(config.getGenuineLoginServer()));
+				ProxyServer.getInstance().getReconnectHandler().setServer(postloginevent.getPlayer());
+				logManager.log(LogType.GENUINE_ACCOUNT_LOGIN, new String[] {playername, ip});
+				postloginevent.getPlayer().sendMessage(ChatMessageType.CHAT, TextComponent.fromLegacyText(ChatColor.GREEN + "歡迎正版玩家登入！"));
+				break;
+			case HTTP_ERROR:
+				logManager.log(LogType.HTTP_ERROR);
+				postloginevent.getPlayer().disconnect(TextComponent.fromLegacyText(
+						ChatColor.RED + "登入失敗！請稍後再嘗試。 錯誤代碼："+ LogType.HTTP_ERROR.getErrorCode()));
+				break;
+			default:
+				logManager.log(LogType.UNKNOWN_ERROR);
+				postloginevent.getPlayer().disconnect(TextComponent.fromLegacyText(ChatColor.RED + "發生不明錯誤！"));
 		}
 	}
 }

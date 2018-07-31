@@ -1,4 +1,9 @@
-正版登入處: GenuineLoginServer
-盜版登入處: PiratedLoginServer
-盜版進入許可: false
-區分大小寫: true
+# ============================================= #
+# 強烈建議使用本插件的指令"accountcheck set"來設定。
+# 不建議非進階使用者直接更動設定檔。
+# ============================================= #
+
+genuine-login-server: GenuineLoginServer
+pirated-login-server: PiratedLoginServer
+pirated-accessible: false
+ping-interval: 5

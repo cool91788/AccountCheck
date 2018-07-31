@@ -21,50 +21,87 @@
 package install.java.accountcheck.listener;
 
 import install.java.accountcheck.AccountCheck;
-import install.java.accountcheck.accountinfo.AccountInfo;
-import install.java.accountcheck.accountinfo.GetAccountInfo;
-import install.java.accountcheck.log.AccountCheckLog;
+import install.java.accountcheck.account.AccountInfo;
+import install.java.accountcheck.log.AccountCheckLogManager;
 import install.java.accountcheck.log.LogType;
+import install.java.accountcheck.yaml.Config;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import net.md_5.bungee.api.Callback;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.event.PreLoginEvent;
+import net.md_5.bungee.api.plugin.Listener;
+import net.md_5.bungee.event.EventHandler;
 
-public class PreLoginListener {
-	public void preLoginCheck(PreLoginEvent preloginevent, AccountCheckLog log) {
+public class PreLoginListener implements Listener{
+	
+	@EventHandler
+	public void chooseOnlineMode(PreLoginEvent preloginevent) {
+		Config config = AccountCheck.getInstance().getConfig();
 		String playername = preloginevent.getConnection().getName();
 		String ip = preloginevent.getConnection().getAddress().toString();
-		AccountInfo accountInfo = GetAccountInfo.getInfo(playername);
-		switch(accountInfo) {
-		case PIRATED_ACCOUNT:
-			log.log(LogType.PIRATED_ACCOUNT_CONNECT, playername, ip);
-			if(AccountCheck.getMainPluginObj().isEnablePirated())
-				preloginevent.getConnection().setOnlineMode(false);
-			else {
-				log.log(LogType.REJECT_PIRATED_ACCOUNT_LOGIN, playername, ip);
-				preloginevent.getConnection().setOnlineMode(true);
-			}
-			break;
-		case PIRATED_ACCOUNT_CASE_INSENSITIVE:
-			log.log(LogType.PIRATED_ACCOUNT_CONNECT, playername, ip);
-			if(AccountCheck.getMainPluginObj().isEnablePirated() && AccountCheck.getMainPluginObj().isCaseSensitive())
-				preloginevent.getConnection().setOnlineMode(false);
-			else {
-				log.log(LogType.REJECT_PIRATED_ACCOUNT_LOGIN, playername, ip);
-				preloginevent.getConnection().setOnlineMode(true);
-			}
-			break;
-		case GENUINE_ACCOUNT:
-			log.log(LogType.GENUINE_ACCOUNT_CONNECT, playername, ip);
+		ip = ip.substring(1, ip.lastIndexOf(':'));
+		
+		AccountCheck.getInstance().getLogManager().log(LogType.PLAYER_CONNECT, new String[] {playername, ip});
+		
+		if(!config.isPiratedAccessible() || config.isPiratedLoginServerOffline()) {
 			preloginevent.getConnection().setOnlineMode(true);
-			break;
-		case HTTP_ERROR:
-			log.log(LogType.HTTP_ERROR, playername, ip);
-			preloginevent.getConnection().disconnect(TextComponent.fromLegacyText(
-					ChatColor.RED + "登入失敗！請稍後再嘗試。 錯誤代碼：" + LogType.HTTP_ERROR.getErrorCode()));
-			break;
-		default:
-			log.log(LogType.UNKNOWN_ERROR, playername, ip);
-			preloginevent.getConnection().disconnect(TextComponent.fromLegacyText(ChatColor.RED + "發生不明錯誤！"));
+			return;
+		}
+		preloginevent.registerIntent(AccountCheck.getInstance());
+		ProxyServer.getInstance().getServers()
+				.get(AccountCheck.getInstance().getConfig().getPiratedLoginServer())
+				.ping(new Callback<ServerPing>() {
+					@Override
+					public void done(ServerPing resault, Throwable error) {
+						if(error == null) {
+							config.setForceOnlineMode(false);
+							ProxyServer.getInstance().getScheduler().runAsync(AccountCheck.getInstance(),
+									new Task(preloginevent, playername));
+						}else {
+							config.setPiratedLoginServerOffline(true);
+							config.setForceOnlineMode(true);
+							preloginevent.getConnection().setOnlineMode(true);
+							preloginevent.completeIntent(AccountCheck.getInstance());
+						}
+					}
+				});
+	}
+	
+	@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
+	private class Task implements Runnable {
+		private final PreLoginEvent preloginevent;
+		private final String playername;
+		
+		@Override
+		public void run() {
+			// 這個階段還無法取得UUID，故直接使用username.
+			AccountInfo accountInfo = AccountCheck.getInstance().getAccountManager().getInfo(playername, true);
+			AccountCheckLogManager logManager = AccountCheck.getInstance().getLogManager();
+			switch(accountInfo) {
+				case PIRATED_ACCOUNT:
+					preloginevent.getConnection().setOnlineMode(false);
+					break;
+				case PIRATED_ACCOUNT_CASE_INSENSITIVE:
+					logManager.log(LogType.REJECT_LOGIN, new String[] {"與正版名稱相同(不區分大小寫)"});
+					preloginevent.getConnection().setOnlineMode(true);
+					break;
+				case GENUINE_ACCOUNT:
+					preloginevent.getConnection().setOnlineMode(true);
+					break;
+				case HTTP_ERROR:
+					logManager.log(LogType.HTTP_ERROR);
+					preloginevent.getConnection().disconnect(TextComponent.fromLegacyText(
+							ChatColor.RED + "登入失敗！請稍後再嘗試。 錯誤代碼：" + LogType.HTTP_ERROR.getErrorCode()));
+					break;
+				default:
+					logManager.log(LogType.UNKNOWN_ERROR);
+					preloginevent.getConnection().disconnect(TextComponent.fromLegacyText(ChatColor.RED + "發生不明錯誤！"));
+			}
+			preloginevent.completeIntent(AccountCheck.getInstance());
 		}
 	}
 }
