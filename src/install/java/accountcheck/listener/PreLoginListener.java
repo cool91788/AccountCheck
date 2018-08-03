@@ -1,8 +1,8 @@
 /*
  * 	AccountCheck - A BungeeCord plugin
- *	Copyright (C) (2014-2018)  Install
+ *	Copyright (C) 2014-2018  Install
  *
- *   This file is part of AccountCheck.
+ *   This file is part of AccountCheck source code.
  *
  *   AccountCheck is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -22,8 +22,9 @@ package install.java.accountcheck.listener;
 
 import install.java.accountcheck.AccountCheck;
 import install.java.accountcheck.account.AccountInfo;
-import install.java.accountcheck.log.AccountCheckLogManager;
+import install.java.accountcheck.log.LogManager;
 import install.java.accountcheck.log.LogType;
+import install.java.accountcheck.util.IP6;
 import install.java.accountcheck.yaml.Config;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -32,76 +33,94 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.event.PreLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
-public class PreLoginListener implements Listener{
+public class PreLoginListener implements Listener {
 	
 	@EventHandler
-	public void chooseOnlineMode(PreLoginEvent preloginevent) {
+	public void onPreLoginEvent(PreLoginEvent event) {
+		chooseOnlineMode(event);
+	}
+	
+	private void chooseOnlineMode(PreLoginEvent event) {
 		Config config = AccountCheck.getInstance().getConfig();
-		String playername = preloginevent.getConnection().getName();
-		String ip = preloginevent.getConnection().getAddress().toString();
-		ip = ip.substring(1, ip.lastIndexOf(':'));
+		String playername = event.getConnection().getName();
+		String ip = event.getConnection().getAddress().getAddress().getHostAddress();
+		// 如果不是ipv4，則為ipv6（這裡不判斷合不合法）
+		if(!ip.matches("^\\d{1,4}\\.\\d{1,4}\\.\\d{1,4}\\.\\d{1,4}$"))
+			ip = new IP6(ip).getCompressedIP6();
 		
 		AccountCheck.getInstance().getLogManager().log(LogType.PLAYER_CONNECT, new String[] {playername, ip});
 		
 		if(!config.isPiratedAccessible() || config.isPiratedLoginServerOffline()) {
-			preloginevent.getConnection().setOnlineMode(true);
+			event.getConnection().setOnlineMode(true);
 			return;
 		}
-		preloginevent.registerIntent(AccountCheck.getInstance());
-		ProxyServer.getInstance().getServers()
-				.get(AccountCheck.getInstance().getConfig().getPiratedLoginServer())
-				.ping(new Callback<ServerPing>() {
-					@Override
-					public void done(ServerPing resault, Throwable error) {
-						if(error == null) {
-							config.setForceOnlineMode(false);
-							ProxyServer.getInstance().getScheduler().runAsync(AccountCheck.getInstance(),
-									new Task(preloginevent, playername));
-						}else {
-							config.setPiratedLoginServerOffline(true);
-							config.setForceOnlineMode(true);
-							preloginevent.getConnection().setOnlineMode(true);
-							preloginevent.completeIntent(AccountCheck.getInstance());
-						}
+		
+		// 檢查盜版登入伺服器是否在線
+		ServerInfo server = ProxyServer.getInstance().getServers()
+				.get(AccountCheck.getInstance().getConfig().getPiratedLoginServer());
+		if(server == null) {
+			config.setPiratedLoginServerOffline(true);
+			config.setForceOnlineMode(true);
+			event.getConnection().setOnlineMode(true);
+		}else {
+			// 告訴Bungeecord將要執行非同步任務
+			event.registerIntent(AccountCheck.getInstance());
+			server.ping(new Callback<ServerPing>() {
+				@Override
+				public void done(ServerPing resault, Throwable error) {
+					if(error == null) {
+						// 	正常在線，進入正常檢測流程
+						config.setForceOnlineMode(false);
+						ProxyServer.getInstance().getScheduler().runAsync(AccountCheck.getInstance(), new CheckAccountTask(event));
+					}else {
+						config.setPiratedLoginServerOffline(true);
+						config.setForceOnlineMode(true);
+						event.getConnection().setOnlineMode(true);
+						// 告訴Bungeecord已完成非同步任務
+						event.completeIntent(AccountCheck.getInstance());
 					}
-				});
+				}
+			});
+		}
 	}
 	
 	@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
-	private class Task implements Runnable {
-		private final PreLoginEvent preloginevent;
-		private final String playername;
+	private class CheckAccountTask implements Runnable {
+		private final PreLoginEvent event;
 		
 		@Override
 		public void run() {
 			// 這個階段還無法取得UUID，故直接使用username.
-			AccountInfo accountInfo = AccountCheck.getInstance().getAccountManager().getInfo(playername, true);
-			AccountCheckLogManager logManager = AccountCheck.getInstance().getLogManager();
+			AccountInfo accountInfo = AccountCheck.getInstance().getAccountManager().getInfo(event.getConnection().getName(), true);
+			LogManager logManager = AccountCheck.getInstance().getLogManager();
+			
 			switch(accountInfo) {
 				case PIRATED_ACCOUNT:
-					preloginevent.getConnection().setOnlineMode(false);
+					event.getConnection().setOnlineMode(false);
 					break;
 				case PIRATED_ACCOUNT_CASE_INSENSITIVE:
 					logManager.log(LogType.REJECT_LOGIN, new String[] {"與正版名稱相同(不區分大小寫)"});
-					preloginevent.getConnection().setOnlineMode(true);
+					event.getConnection().setOnlineMode(true);
 					break;
 				case GENUINE_ACCOUNT:
-					preloginevent.getConnection().setOnlineMode(true);
+					event.getConnection().setOnlineMode(true);
 					break;
 				case HTTP_ERROR:
 					logManager.log(LogType.HTTP_ERROR);
-					preloginevent.getConnection().disconnect(TextComponent.fromLegacyText(
+					event.getConnection().disconnect(TextComponent.fromLegacyText(
 							ChatColor.RED + "登入失敗！請稍後再嘗試。 錯誤代碼：" + LogType.HTTP_ERROR.getErrorCode()));
 					break;
 				default:
 					logManager.log(LogType.UNKNOWN_ERROR);
-					preloginevent.getConnection().disconnect(TextComponent.fromLegacyText(ChatColor.RED + "發生不明錯誤！"));
+					event.getConnection().disconnect(TextComponent.fromLegacyText(ChatColor.RED + "發生不明錯誤！"));
 			}
-			preloginevent.completeIntent(AccountCheck.getInstance());
+			// 告訴Bungeecord已完成非同步任務
+			event.completeIntent(AccountCheck.getInstance());
 		}
 	}
 }

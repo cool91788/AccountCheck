@@ -1,8 +1,8 @@
 /*
  * 	AccountCheck - A BungeeCord plugin
- *	Copyright (C) (2014-2018)  Install
+ *	Copyright (C) 2014-2018  Install
  *
- *   This file is part of AccountCheck.
+ *   This file is part of AccountCheck source code.
  *
  *   AccountCheck is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -25,13 +25,13 @@ import java.util.logging.Logger;
 import install.java.accountcheck.AccountCheck;
 import net.md_5.bungee.api.ChatColor;
 
-public class AccountCheckLogManager {
+public class LogManager {
 	
 	private final AccountCheckLogger logger;
 	
 	public Logger getLogger() {return logger;}
 	
-	public AccountCheckLogManager(AccountCheck plugin) {logger = new AccountCheckLogger(plugin);}
+	public LogManager(AccountCheck plugin) {logger = new AccountCheckLogger(plugin);}
 	
 	public void log(LogType logtype) {log(logtype, null);}
 	
@@ -39,13 +39,15 @@ public class AccountCheckLogManager {
 		switch(logtype) {
 			case PIRATED_ACCOUNT_LOGIN:
 				//LogArgs format String[] {name, ip}
-				logger.info(ChatColor.YELLOW + "盜版玩家：" + ChatColor.AQUA + logArgs[0] + ChatColor.RESET + "，來自：" 
-						+ ChatColor.RED + logArgs[1] + ChatColor.YELLOW + "。登入！");
+				logger.info(ChatColor.YELLOW + "盜版玩家" + ChatColor.RESET + "：" + ChatColor.AQUA + logArgs[0]
+						+ ChatColor.RESET + "，來自：" + ChatColor.RED + logArgs[1] + ChatColor.RESET + "。" +
+						ChatColor.YELLOW + "登入！");
 				break;
 			case GENUINE_ACCOUNT_LOGIN:
 				// LogArgs format String[] {name, ip}
-				logger.info(ChatColor.YELLOW + "正版玩家：" + ChatColor.AQUA + logArgs[0] + ChatColor.RESET + "，來自：" 
-						+ ChatColor.RED + logArgs[1] + ChatColor.YELLOW + "。登入！");
+				logger.info(ChatColor.YELLOW + "正版玩家" + ChatColor.RESET + "：" + ChatColor.AQUA + logArgs[0]
+						+ ChatColor.RESET + "，來自：" + ChatColor.RED + logArgs[1] + ChatColor.RESET + "。" +
+						ChatColor.YELLOW + "登入！");
 				break;
 			case PLAYER_CONNECT:
 				// LogArgs format String[] {name, ip}

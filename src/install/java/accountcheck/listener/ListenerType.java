@@ -18,22 +18,9 @@
  *   along with AccountCheck.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package install.java.accountcheck.log;
+package install.java.accountcheck.listener;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public enum LogType {
-	PLAYER_CONNECT(1),	// LogArgs format String[] {name, ip}
-	PIRATED_ACCOUNT_LOGIN(10),	// LogArgs format String[] {name, ip}
-	GENUINE_ACCOUNT_LOGIN(11),	// LogArgs format String[] {name, ip}
-	REJECT_LOGIN(12),	// LogArgs format String[] {reason}
-	HTTP_ERROR(100),	// LogArgs format {null}
-	SERVER_DOWN(101),	// LogArgs format String[] {reason}
-	UNKNOWN_ERROR(-1);	// LogArgs format {null}
-	
-	@Getter
-	private final int errorCode;
+public enum ListenerType {
+	PRELOGIN,
+	POSTLOGIN;
 }

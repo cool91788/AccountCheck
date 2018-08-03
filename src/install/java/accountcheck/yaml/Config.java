@@ -1,8 +1,8 @@
 /*
  * 	AccountCheck - A BungeeCord plugin
- *	Copyright (C) (2014-2018)  Install
+ *	Copyright (C) 2018  Install
  *
- *   This file is part of AccountCheck.
+ *   This file is part of AccountCheck source code.
  *
  *   AccountCheck is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -42,9 +42,9 @@ import net.md_5.bungee.config.YamlConfiguration;
 public class Config {
 	
 	@Getter@Setter
-	private String genuineLoginServer;	// 正版登入伺服器
+	private String genuineLoginServer = "GenuineLoginServer";	// 正版登入伺服器
 	@Getter@Setter
-	private String piratedLoginServer;	// 盜版登入伺服器
+	private String piratedLoginServer = "PiratedLoginServer";	// 盜版登入伺服器
 	@Getter@Setter
 	private boolean piratedAccessible = false;	// 是否開放盜版玩家進入，預設關閉。
 	@Getter@Setter
@@ -58,14 +58,14 @@ public class Config {
 	
 	private final File configFile;
 	
-	public void loadConfig() throws FileNotFoundException{
+	public void load() throws FileNotFoundException{
 		try(InputStreamReader is = new InputStreamReader(new FileInputStream(configFile), "UTF-8");) {
 			
 			Configuration configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(is);
-			genuineLoginServer = configuration.getString(ConfigEntry.GENUINE_LOGIN_SERVER.getEntryName(), "GenuineLoginServer");
-			piratedLoginServer = configuration.getString(ConfigEntry.PIRATED_LOGIN_SERVER.getEntryName(), "PiratedLoginServer");
-			piratedAccessible = configuration.getBoolean(ConfigEntry.PIRATED_ACCESSIBLE.getEntryName(), false);
-			pingInterval = configuration.getInt(ConfigEntry.PING_INTERVAL.getEntryName(), 5);
+			genuineLoginServer = configuration.getString(ConfigEntry.GENUINE_LOGIN_SERVER.toString(), "GenuineLoginServer");
+			piratedLoginServer = configuration.getString(ConfigEntry.PIRATED_LOGIN_SERVER.toString(), "PiratedLoginServer");
+			piratedAccessible = configuration.getBoolean(ConfigEntry.PIRATED_ACCESSIBLE.toString(), false);
+			pingInterval = configuration.getInt(ConfigEntry.PING_INTERVAL.toString(), 5);
 		}catch (UnsupportedEncodingException exception) {
 			// do nothing
 		}catch (FileNotFoundException exception) {
@@ -75,23 +75,25 @@ public class Config {
 		}
 	}
 	
-	public void setConfig(ConfigEntry entry, Object newValue) throws FileNotFoundException, IOException {
+	public void set(ConfigEntry entry, Object newValue) throws FileNotFoundException, IOException {
 		try (InputStreamReader is = new InputStreamReader(new FileInputStream(configFile), "UTF-8");
 			OutputStreamWriter os = new OutputStreamWriter(new FileOutputStream(configFile), "UTF-8");) {
 			
 			Configuration configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(is);
 			
-			configuration.set(ConfigEntry.GENUINE_LOGIN_SERVER.getEntryName(), genuineLoginServer);
-			configuration.set(ConfigEntry.PIRATED_LOGIN_SERVER.getEntryName(), piratedLoginServer);
-			configuration.set(ConfigEntry.PIRATED_ACCESSIBLE.getEntryName(), piratedAccessible);
-			configuration.set(ConfigEntry.PING_INTERVAL.getEntryName(), pingInterval);
+			configuration.set(ConfigEntry.GENUINE_LOGIN_SERVER.toString(), genuineLoginServer);
+			configuration.set(ConfigEntry.PIRATED_LOGIN_SERVER.toString(), piratedLoginServer);
+			configuration.set(ConfigEntry.PIRATED_ACCESSIBLE.toString(), piratedAccessible);
+			configuration.set(ConfigEntry.PING_INTERVAL.toString(), pingInterval);
 			
-			configuration.set(entry.getEntryName(), newValue);
+			configuration.set(entry.toString(), newValue);
 			
-			os.write("# ============================================= #\n");
-			os.write("# 強烈建議使用本插件的指令\"accountcheck set\"來設定。\n");
+			os.write("# =============================================================================== #\n");
+			os.write("# 強烈建議使用指令 \"accountcheck set\" 來更動設定。\n");
+			os.write("# It's highly recommended to use command \"accountcheck set\" to change settings.\n");
 			os.write("# 不建議非進階使用者直接更動設定檔。\n");
-			os.write("# ============================================= #\n");
+			os.write("# It's NOT RECOMMENDED non advances user to change configuration file directly.\n");
+			os.write("# =============================================================================== #\n");
 			os.write('\n');
 			os.flush();
 			ConfigurationProvider.getProvider(YamlConfiguration.class).save(configuration, os);
@@ -100,7 +102,7 @@ public class Config {
 		}
 	}
 	
-	public void checkConfigFile() {
+	public void find() {
 		AccountCheck accountCheck = AccountCheck.getInstance();
 		if (!accountCheck.getDataFolder().exists()) {
 			accountCheck.getDataFolder().mkdir();

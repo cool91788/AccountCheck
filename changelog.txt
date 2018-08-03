@@ -1,0 +1,92 @@
+0.1BETA
+測試分流選擇
+
+0.2BETA
+可以正確分辨正盜版
+
+v1.0
+第一個正式版出爐！
+
+v1.1
+修正NULL錯誤
+
+v1.2
+記憶體運用優化
+
+v1.2.1
+修正長期運行時產生之錯誤
+
+v1.2.3
+修正部份導致當機之BUG，記憶體運用優化
+
+v1.2.4
+修正log時發生的錯誤
+
+v1.2.5
+採用GPLv3協議，並且上傳至GitHub。
+正式公開的一個版本。
+
+v1.2.6
+修正部份錯誤，並且新增錯誤代碼系統。
+
+v1.2.7_U (v1.2.7_UX)
+採用新的方式與官方認證，並且排除部份錯誤。（測試版本）
+
+**大改版，跳過1.3版本號...**
+
+v1.4_BETA
+修正嚴重致命BUG、採用多執行緒、新建指令、界面美觀化。
+初始時會檢查運行環境是否符合需求，登入時間需在限制12秒內完成。
+
+v1.4
+1.4版正式釋出。
+修改顯示美觀。
+
+v1.5
+新增即時查詢玩家正盜版資訊功能、可暫時關閉盜版進入。
+
+v1.5.1
+可以透過指令的方式修改設定檔。
+程式碼結構重整，廢棄多執行緒，以增加效率。
+設定檔全面強制使用UTF-8。
+
+v1.5.2
+修正因官方更動相關API導致不能進入之問題。
+
+v1.5.3
+修正目錄包含空白字元發生錯誤之問題。
+
+v1.6
+部份程式碼重構。
+當玩家名稱拼寫相同時，可以選擇是否區分大小寫來篩選。
+移除無用功能。
+更新README。
+
+1.7-Beta-1.0
+新增 - 正版玩家辨識偏好UUID。
+新增 - 新增快取功能微幅增進效能。
+新增 - 可自動檢測盜版登入伺服器的狀況，若不再線上則強制啟動正版驗證。
+更動 - 全面名稱檢測不區分大小寫（根據Bungeecord特性）
+更動 - 設定檔修改，新版本不向下相容。
+New - for online mode player, will preference using UUID for identification.
+New - add cache for a little bit performance.
+New - will auto detect offline mode login server state, will force open online mode if it offline.
+Changed - players name will always case insensitive by default.(Cause Bungeecord.)
+Changed - changed configuration file, the new version won't downward compatibility.
+
+1.7 (2018/8/4)
+新增 - 指令權限系統。
+新增 - 更改設定時，自動即時更新自動檢測系統。
+新增 - 設定檔新增英文說明。
+新增 - 支援IPv6顯示。
+新增 - 英文changelog，並向上附加到 1.7-Beta-1.0
+修正 - 當找不到伺服器資訊時，自動檢測系統將癱瘓。
+New - command permission system.
+New -  auto detector will update itself when changing settings.
+New - add English description at configuration file.
+New - support IPv6 display.
+New - add support English description in changelog, and also added for 1.7-Beta-1.0.
+Fixed - auto detector will crash while can't found the server information. 
+
+
+

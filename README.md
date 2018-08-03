@@ -1,5 +1,6 @@
 此插件目前只提供繁體中文界面。   
 This plugin is only provide Chinese(Traditional) interface now.   
+English version coming soon!   
    
 原始碼可以在 [GitHub](https://github.com/cool91788/AccountCheck) 取得   
 Source code is currently available on [GitHub](https://github.com/cool91788/AccountCheck).   
@@ -23,6 +24,7 @@ If want mail to me , Chinese is better  :P
 # Todo   
 - 考慮新增proxy server清單選擇流量方向，不再單一限制兩個
 - <構想>新增管制內部跳proxy server的正盜版驗證（基於玩家ID，因登錄時已透過online mode篩選正版ID）
+- 加入語言檔，預設支援繁體中文、英文。(English interface, coming soon.)
    
    
 # How to build  如何編譯   

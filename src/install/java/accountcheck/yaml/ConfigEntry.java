@@ -1,8 +1,8 @@
 /*
  * 	AccountCheck - A BungeeCord plugin
- *	Copyright (C) (2014-2018)  Install
+ *	Copyright (C) 2018  Install
  *
- *   This file is part of AccountCheck.
+ *   This file is part of AccountCheck source code.
  *
  *   AccountCheck is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@
 package install.java.accountcheck.yaml;
 
 import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -31,6 +30,8 @@ public enum ConfigEntry {
 	PIRATED_ACCESSIBLE("pirated-accessible"),
 	PING_INTERVAL("ping-interval");
 
-	@Getter
 	private final String entryName;
+	
+	@Override
+	public String toString() {return entryName;}
 }

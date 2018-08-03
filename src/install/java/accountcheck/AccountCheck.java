@@ -1,8 +1,8 @@
 /*
  * 	AccountCheck - A BungeeCord plugin
- *	Copyright (C) (2014-2018)  Install
+ *	Copyright (C) 2014-2018  Install
  *
- *   This file is part of AccountCheck.
+ *   This file is part of AccountCheck source code.
  *
  *   AccountCheck is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -25,16 +25,16 @@ import java.io.FileNotFoundException;
 import java.util.concurrent.TimeUnit;
 
 import install.java.accountcheck.account.AccountManager;
-import install.java.accountcheck.command.AccountCheckCommand;
-import install.java.accountcheck.listener.PostLoginListener;
-import install.java.accountcheck.listener.PreLoginListener;
-import install.java.accountcheck.log.AccountCheckLogManager;
+import install.java.accountcheck.command.CommandManager;
+import install.java.accountcheck.listener.ListenerManager;
+import install.java.accountcheck.log.LogManager;
 import install.java.accountcheck.yaml.Config;
 import lombok.Getter;
 import net.md_5.bungee.api.Callback;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerPing;
+import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
 
@@ -43,11 +43,15 @@ public class AccountCheck extends Plugin {
 	@Getter
 	private static AccountCheck instance;
 	@Getter
-	private AccountCheckLogManager logManager;
+	private LogManager logManager;
 	@Getter
 	private Config config;
 	@Getter
 	private AccountManager accountManager;
+	@Getter
+	private ListenerManager listenerManager;
+	
+	
 	private ScheduledTask autoPingTask;
 	
 	public AccountCheck() {instance = this;}
@@ -55,27 +59,30 @@ public class AccountCheck extends Plugin {
 	@Override
 	public void onEnable() {
 		//自訂log格式
-		logManager = new AccountCheckLogManager(this);
+		logManager = new LogManager(this);
 		
 		//第一次使用訊息
 		firstTimeToUse();
 		
 		//檢查與讀取設定檔
 		config = new Config(new File(getDataFolder(), "config.yml"));
-		config.checkConfigFile();
+		config.find();
 		try {
-			config.loadConfig();
+			config.load();
 		} catch (FileNotFoundException exception) {
 			throw new RuntimeException("Load config fail!", exception);
 		}
 		
 		accountManager = new AccountManager();
+		listenerManager = new ListenerManager(this);
 		
-		getProxy().getPluginManager().registerListener(this, new PreLoginListener());
-		getProxy().getPluginManager().registerListener(this, new PostLoginListener());
-		getProxy().getPluginManager().registerCommand(this, new AccountCheckCommand());
+		listenerManager.registerAll();
+		getProxy().getPluginManager().registerCommand(this, new CommandManager());
+		
 		createPingTask(config.getPingInterval());
-		logManager.getLogger().info(ChatColor.RED + "版本：" + getDescription().getVersion());
+		
+		logManager.getLogger().info(ChatColor.GOLD + ChatColor.BOLD.toString() + "AccountCheck <半正版驗證> " +
+				ChatColor.RED + ChatColor.BOLD.toString() + getDescription().getVersion());
 	}
 	
 	private void firstTimeToUse() {
@@ -94,19 +101,26 @@ public class AccountCheck extends Plugin {
 			autoPingTask.cancel();
 	}
 	
-	public void modifyPingTask(int interval) {
+	public void updatePingTask(int interval) {
 		cancelPingTask();
 		createPingTask(interval);
 	}
 	
 	private void createPingTask(int interval) {
+		cancelPingTask();
+		ServerInfo server = ProxyServer.getInstance().getServers().get(config.getPiratedLoginServer());
+		if(server == null) {
+			config.setPiratedLoginServerOffline(true);
+			config.setForceOnlineMode(true);
+			return;
+		}
 		autoPingTask = ProxyServer.getInstance().getScheduler().schedule(this, new Runnable() {
 			
 			@Override
 			public void run() {
-				ProxyServer.getInstance().getServers().get(config.getPiratedLoginServer()).ping(new Callback<ServerPing>() {
+				server.ping(new Callback<ServerPing>() {
 					@Override
-					public void done(ServerPing resault, Throwable error) {
+					public void done(ServerPing resault, Throwable error) { 
 						config.setPiratedLoginServerOffline((error != null));
 					}
 				});

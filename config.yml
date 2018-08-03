@@ -1,7 +1,9 @@
-# ============================================= #
-# 強烈建議使用本插件的指令"accountcheck set"來設定。
+# =============================================================================== #
+# 強烈建議使用指令 "accountcheck set" 來更動設定。
+# It's highly recommended to use command "accountcheck set" to change settings.
 # 不建議非進階使用者直接更動設定檔。
-# ============================================= #
+# It's NOT RECOMMENDED non advances user to change configuration file directly.
+# =============================================================================== #
 
 genuine-login-server: GenuineLoginServer
 pirated-login-server: PiratedLoginServer
