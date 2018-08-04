@@ -77,7 +77,7 @@ public class CommandManager extends Command{
 						break permission_check;
 				}// end of switch
 				sender.sendMessage(new ComponentBuilder(ChatColor.RED + "您沒有權限執行此命令。").create());
-			}// end of commands
+			}// end of permission_check
 		}else {
 			basic.version(sender);
 			sender.sendMessage(new ComponentBuilder(ChatColor.YELLOW + "半正版驗證插件。欲知詳細請輸入/ac help.").create());
