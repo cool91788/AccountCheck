@@ -56,6 +56,7 @@ class Basic {
 	void reload(CommandSender sender) {	
 		try {
 			AccountCheck.getInstance().getConfig().load();
+			AccountCheck.getInstance().updatePingTask(AccountCheck.getInstance().getConfig().getPingInterval());
 			sender.sendMessage(new ComponentBuilder(ChatColor.YELLOW + "重新讀取設定檔完成！").create());
 		}catch (FileNotFoundException exception) {
 			sender.sendMessage(new ComponentBuilder(ChatColor.RED + "重新讀取設定檔失敗！").create());
